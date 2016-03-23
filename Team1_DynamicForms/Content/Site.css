@@ -1,0 +1,197 @@
+﻿body {
+    font-family: Arial, Helvetica, sans-serif;
+    padding-bottom: 20px;
+    background: rgba(245,245,245,1);
+
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding: 10px 30px 40px 30px;
+   background: #ffffff;
+   border: 1px outset rgb(200,200,200);
+   border-radius: 2px;
+   overflow: hidden;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+a:visited{
+   font-size: 18px;
+   line-height: 22px;
+   padding: 0 13px 0 12px;
+   color: white !important;
+   text-decoration: none;
+}
+
+a:focus{
+    text-decoration: none;
+}
+
+
+/* Layout styles */
+
+.navbar {
+    background: linear-gradient(to bottom, #003876 0%,#002147 60%);
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.navbar-brand{
+
+    background: url(images/header_logo_2014.png) 0 0 no-repeat;
+    display: inline-block;
+    background-size: 298px 72px;
+    width: 298px;
+    height: 72px;
+}
+
+.nav-option a{
+    font-size: 18px;
+    line-height: 22px;
+   padding: 0 13px 0 12px;
+   color: white !important;
+}
+
+
+
+
+/*------------------------------------*/
+
+/*------Universal Styles------*/
+
+.button-main{
+    padding: 13px;
+    
+    background: rgba(0,50,105, .75);
+    border-radius: 10px;
+    overflow: auto;
+    color: white;
+    font-size: 16px;
+}
+
+.button-main:hover span{
+    color: #f5cf47;
+}
+
+.button-main:hover{
+    color: white;
+    text-decoration: none;
+}
+
+.row{
+    margin-top: 30px;
+
+}
+
+hr{
+   border-top: 7px solid #f5cf47;
+}
+
+
+/*------------------------------------*/
+
+/* Form Creation */
+
+.formOptions ul{
+    border-right: 2px solid rgb(245,245,245);
+}
+
+.formOption{
+    list-style-type: none;
+    font-size: 14px;
+    padding: 5px;
+    -webkit-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    width: 130px;
+    text-align: center;
+    color: rgb(100,100,100);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.formOption:hover{
+    cursor:pointer;
+    background: rgb(230,230,230);
+    box-shadow: none;
+}
+
+.formOption span {
+    float: left;
+}
+
+#Form{
+    -webkit-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    min-height: 300px;
+    padding: 0 0 0 0;
+}
+
+.removeButton{
+    -webkit-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    background: rgba(0,50,105, .5);
+    color: rgb(235,235,235);
+    border-radius: 3px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    display: table-cell;
+    padding: 2px 0px 0px 0px;
+    font-size: 17px;
+    float: right;
+    position: relative;
+    transition: color ease-in-out .15s, box-shadow ease-in-out .15s, background ease-in-out .15s;
+
+}
+
+.removeButton:hover{
+    background: red;
+    cursor: pointer;
+    color: white;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+
+.fieldOptions{
+    min-height: 50px;
+    width: 100%;
+    background: rgba(0,50,105, .3);
+    padding: 15px 5px 15px 10px;
+}
+
+.fieldBreak{
+    padding-bottom: 15px;
+}
+
+.formButton{
+    background: rgba(0,50,105, 1);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.formButton:hover{
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+
+
+/*------------------------------------*/

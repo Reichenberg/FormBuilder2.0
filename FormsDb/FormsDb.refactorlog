@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="3881bb68-471d-447f-ba02-d7176ea4e81a" ChangeDateTime="02/06/2016 00:11:44">
+    <Property Name="ElementName" Value="[dbo].[WholeForm].[UserId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[WholeForm]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AccountId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5427730f-27d0-4aee-8998-70993ebe1696" ChangeDateTime="02/06/2016 02:08:03">
+    <Property Name="ElementName" Value="[dbo].[FK_FormPage_]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[FormPage]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_FormPage_WholeForm]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="15dfc5a1-6d6d-426f-911c-ead7e71d7cf9" ChangeDateTime="02/06/2016 02:21:13">
+    <Property Name="ElementName" Value="[dbo].[SubmissionWhole].[AccountId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SubmissionWhole]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Finished" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="701d6a49-9f49-45e9-9091-2dda82f87688" ChangeDateTime="02/06/2016 02:21:23">
+    <Property Name="ElementName" Value="[dbo].[SubmissionWhole].[WholeFormId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SubmissionWhole]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AccountId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5b90deb1-691b-452b-a849-5ad143ab4961" ChangeDateTime="02/06/2016 02:31:28">
+    <Property Name="ElementName" Value="[dbo].[SubmissionWhole].[WholeFormId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SubmissionWhole]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FormSubmissionId" />
+  </Operation>
+</Operations>

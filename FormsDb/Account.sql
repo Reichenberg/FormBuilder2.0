@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[Account]
+(
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [Name] NVARCHAR(50) NOT NULL, 
+    [Type] NVARCHAR(50) NOT NULL
+)

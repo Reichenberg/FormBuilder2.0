@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Hello @User.Identity.GetUserName()</h2>
+<hr />
+
+    <div class="row">
+        <div class="col-md-3">
+            <a class="button-main" href="/Admin/CreateForm"><span class="glyphicon glyphicon-plus"></span> New Form</a>
+        </div>
+    </div>
+
+
