@@ -208,6 +208,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SuperAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\WorkFlowController.cs" />
     <Compile Include="DataProvider\FormsDataProvider.cs" />
     <Compile Include="DataRepository\FormsRepository.cs" />
     <Compile Include="Global.asax.cs">
@@ -260,6 +261,7 @@
     <Compile Include="Models\WorkFlow.cs">
       <DependentUpon>FormsDbAzureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\WorkflowViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -413,6 +415,9 @@
     <Content Include="Views\User\Fill.cshtml" />
     <Content Include="Views\User\Submit.cshtml" />
     <Content Include="Views\Admin\CreateForm.cshtml" />
+    <Content Include="Views\WorkFlow\Create.cshtml" />
+    <Content Include="Views\WorkFlow\CreatePartial.cshtml" />
+    <Content Include="Views\WorkFlow\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
