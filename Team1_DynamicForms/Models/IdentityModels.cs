@@ -47,7 +47,7 @@ namespace Team1_DynamicForms.Models
         SuperAdmin
     };
 
-    public class MyDbInitializer : DropCreateDatabaseAlways<Models.ApplicationDbContext>
+    public class MyDbInitializer : CreateDatabaseIfNotExists<Models.ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {
