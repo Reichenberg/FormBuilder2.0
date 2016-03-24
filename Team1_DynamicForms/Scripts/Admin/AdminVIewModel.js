@@ -2,6 +2,8 @@
     var self = this;
     
     self.FormFields = ko.observableArray();
+    self.FormName = ko.observable();
+    self.nameClass = ko.observable("");
 
     self.toggleFieldOptions = ko.observable(true);
     self.optionVal = ko.observable();
@@ -77,37 +79,43 @@
     }
 
     self.SubmitForm = function () {
-        if(self.FormFields().length > 0)
+        if(self.FormFields().length <= 0)
         {
-            for (var i = 0; i < self.FormFields().length; i++)
-            {
+            bootbox.alert("Your form cannot be empty.");
+            $("#formName").removeClass("has-error", 0, 0, 0);
+        }
+        else if(!self.FormName())
+        {
+            bootbox.alert("The form must have a name.");
+            $("#formName").addClass("has-error", 0, 0, 0);
+        }
+        else {
+            $("#formName").removeClass("has-error", 0, 0, 0);
+            self.nameClass("");
+            for (var i = 0; i < self.FormFields().length; i++) {
                 self.Form.appendChild(self.FormFields()[i].CreateElement());
                 if (self.FormFields()[i].Type() === "header") {
                     self.Form.appendChild(document.createElement("hr"));
-}
+                }
             }
             self.Form = self.Form.innerHTML;
             $.ajax({
                 type: "POST",
                 url: "/Admin/AddForm",
                 data: {
-                    formName: "Test",
+                    formName: self.FormName(),
                     formHtml: self.Form,
                     workflow: 0
                 },
                 success: function (data) {
-                   bootbox.alert(data.Message);
+                    bootbox.alert(data.Message);
                 },
                 error: function (data) {
-                   bootbox.alert(data.Message);
+                    bootbox.alert(data.Message);
                 }
             });
-             self.Form = document.createElement('div');
-             self.Form.setAttribute("id", "Form");
-        }
-        else
-        {
-
+            self.Form = document.createElement('div');
+            self.Form.setAttribute("id", "Form");
         }
     }
 }
