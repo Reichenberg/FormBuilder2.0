@@ -15,9 +15,9 @@
         label.innerText = self.Label();
 
         var input = document.createElement("input");
-        input.setAttribute("value", "");
         input.setAttribute("class", "form-control");
         input.setAttribute("type", self.Type());
+        input.setAttribute("value", "");
         input.setAttribute("name", self.Name());
         input.required = self.IsRequired();
 
@@ -44,8 +44,8 @@ var Checkbox = function () {
         var label = document.createElement("label");
 
         var input = document.createElement("input");
-        input.setAttribute("value", "");
         input.setAttribute("type", self.Type());
+        input.setAttribute("value", "");
         input.setAttribute("name", self.Name());
 
         //add input to label
@@ -160,8 +160,8 @@ var RadioGroup = function () {
             
             //set up radio input with appropriate values
             var radio = document.createElement("input");
-            radio.setAttribute("value", self.RadioList()[c].Value());
             radio.setAttribute("type", self.Type());
+            radio.setAttribute("value", self.RadioList()[c].Value());
             radio.setAttribute("name", self.Name());
 
             radio.required = self.IsRequired();
@@ -201,9 +201,9 @@ var DateField = function () {
         label.innerText = self.Label();
 
         var input = document.createElement("input");
-        input.setAttribute("value", "");
         input.setAttribute("class", "form-control " + self.Type());
         input.setAttribute("type", self.Type());
+        input.setAttribute("value", "");
         input.setAttribute("name", self.Name());
         input.required = self.IsRequired();
 
@@ -233,9 +233,9 @@ var TimeField = function () {
         label.innerText = self.Label();
 
         var input = document.createElement("input");
-        input.setAttribute("value", "");
         input.setAttribute("class", "form-control " + self.Type());
         input.setAttribute("type", self.Type());
+        input.setAttribute("value", "");
         input.setAttribute("name", self.Name());
         input.required = self.IsRequired();
 

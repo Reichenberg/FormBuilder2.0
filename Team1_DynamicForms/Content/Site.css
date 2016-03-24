@@ -40,6 +40,16 @@ a:focus{
     text-decoration: none;
 }
 
+.input-group-addon {
+    border-top-left-radius: 2px !important;
+    border-bottom-left-radius: 2px !important;
+}
+
+.input-group .form-control {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
 
 /* Layout styles */
 
@@ -190,6 +200,11 @@ hr{
     text-decoration: none;
     color: white;
     cursor: pointer;
+}
+
+#formName {
+    margin-bottom: 20px;
+    margin-left: 20%;
 }
 
 
