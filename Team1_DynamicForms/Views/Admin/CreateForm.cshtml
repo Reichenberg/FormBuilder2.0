@@ -25,8 +25,12 @@
                 <label for="optionToggle"><input type="checkbox" data-bind="checked: toggleFieldOptions" />Toggle Options View</label>
             </div>
         </div>
-        <div class="col-md-8 col-xs-12" id="Form" data-bind="foreach: FormFields">
-            
+        <div class="col-md-8 col-xs-12">
+            <div class="input-group" id="formName">
+                <span class="input-group-addon" id="basic-addon1">Form Name</span>
+                <input type="text" class="form-control" data-bind="value: FormName">
+            </div>
+            <div id="Form" data-bind="foreach: FormFields">
             <!-- ko if: Type() === 'header' -->
             
             <div class="fieldOptions" data-bind="visible: $root.toggleFieldOptions">
@@ -124,7 +128,7 @@
             <div class="fieldBreak" data-bind="visible: $root.toggleFieldOptions"></div>
             <!-- /ko -->
 
-            
+            </div>
             </div>
         
         </div>
