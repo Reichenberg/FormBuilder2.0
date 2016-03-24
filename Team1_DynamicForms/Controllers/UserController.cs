@@ -19,9 +19,18 @@ namespace Team1_DynamicForms.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return View();
-            }
+                // creates an item usint the FormsAndSubmissionsViewModel to allow the user to
+                // view and access submitted and unsubmitted forms
 
+                string userName = User.Identity.Name;
+
+                FormsAndSubmissionsViewModel formsubmview = new FormsAndSubmissionsViewModel();
+
+                formsubmview.submittedForms = db.GetSubmittedFormFromDb(subid, userName);
+                formsubmview.unsubmittedForms = db.GetWholeFormFromDb(whformid);
+
+                return View(formsubmview);
+            }
             return RedirectToAction("../Account/Login");
         }
 

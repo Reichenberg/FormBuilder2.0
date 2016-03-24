@@ -301,5 +301,46 @@ namespace Team1_DynamicForms.DataRepository
             FormPage formPage = GetFormToFill(wholeForm.Id);
             return formPage;
         }
+
+        // method to retrieve a wholeform for a user to view
+        // is going to be used to generate a link to the actual form page
+        // cheers and hope that it works
+        // wholeFormId used is the id of the form to be retrieved
+        public WholeForm GetWholeForm(int wholeFormId)
+        {
+            WholeForm wholeFormToGet = db.WholeForms.Find(wholeFormId);
+
+            var RetrievingWholeForm = db.WholeForms.Where(w => w.Id == wholeFormId);
+
+            foreach (var itemId in RetrievingWholeForm)
+            {
+                wholeFormToGet = itemId;
+            }
+
+            return wholeFormToGet;
+        }
+
+        // method to retrieve a submissionwhole for user to view
+        // is going to be used to generate link to the actual form page
+        // submissionFormId keeps track of the form so that a link to it can be 
+        // generated later
+        // userId allows us to make sure that the user who is trying to access
+        // this feature has actually saved their own form and aren't 
+        // accessing someone else's
+        public SubmissionWhole GetSubmittedForm(int submissionFormId, int userId)
+        {
+            SubmissionWhole submittedFormToGet = db.SubmissionWholes.Find(submissionFormId);
+
+            var RetrievingSubmittedForm = db.SubmissionWholes.Where(s => (s.FormSubmissionId == submissionFormId))
+                                                                .Where(s => (s.Finished == "No"))
+                                                                .Where(s => (s.AccountId == userId));
+
+            foreach (var itemId in RetrievingSubmittedForm)
+            {
+                submittedFormToGet = itemId;
+            }
+
+            return submittedFormToGet;
+        }
     }
 }

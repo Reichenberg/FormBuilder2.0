@@ -227,6 +227,7 @@
     <Compile Include="Models\FormPage.cs">
       <DependentUpon>FormsDbAzureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FormsAndSubmissionsViewModel.cs" />
     <Compile Include="Models\FormsDbAzureModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

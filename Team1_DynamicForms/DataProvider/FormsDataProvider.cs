@@ -283,5 +283,36 @@ namespace Team1_DynamicForms.DataProvider
 
             return false;
         }
+
+        //should retrieve a wholeform for a user to view
+        // the id number will be used to generate a link to the actual form page
+        // wholeFormId used is the id of the form to be retrieved
+        public WholeForm GetWholeFormFromDb(int wholeFormId)
+        {
+            try
+            {
+                return db.GetWholeForm(wholeFormId);
+            }
+            catch (Exception e)
+            {
+                throw (new Exception("Error retrieving form page from database."));
+            }
+        }
+
+        //should retrieve a submitted form for a user to view
+        // userId is used to make sure that the forms submitted will have the correct user
+            // forms attached to it
+        // submissionFormId is the id used to generate the link for the page
+        public SubmissionWhole GetSubmittedFormFromDb(int submissionFormId, int userId)
+        {
+            try
+            {
+                return db.GetSubmittedForm(submissionFormId, userId);
+            }
+            catch (Exception e)
+            {
+                throw (new Exception("Error retrieving submitted form from database."));
+            }
+        }
     }
 }
