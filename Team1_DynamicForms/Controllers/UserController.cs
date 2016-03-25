@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Team1_DynamicForms.DataProvider;
 using Team1_DynamicForms.Models;
 
@@ -17,14 +18,21 @@ namespace Team1_DynamicForms.Controllers
         // GET: User  
         public ActionResult Index()
         {
+
             if (User.Identity.IsAuthenticated)
             {
                 // creates an item usint the FormsAndSubmissionsViewModel to allow the user to
                 // view and access submitted and unsubmitted forms
-
-                string userName = User.Identity.Name;
+                var userNameObj = Membership.GetUser().ProviderUserKey;
+                int userName = Convert.ToInt32(userNameObj);
+                //string userName1 = User.Identity.Name;
+                //int userName = int.Parse(userName1);
 
                 FormsAndSubmissionsViewModel formsubmview = new FormsAndSubmissionsViewModel();
+                int NUM = 5;
+                int subid = NUM;
+
+                int whformid = NUM;
 
                 formsubmview.submittedForms = db.GetSubmittedFormFromDb(subid, userName);
                 formsubmview.unsubmittedForms = db.GetWholeFormFromDb(whformid);

@@ -35,7 +35,7 @@
         @foreach (var item in Model.unsubmittedForms)
         {
             <tr>
-                <td>@Html.ActionLink("Form @item.Id", "Fill", "User", new { saved = 0, id = @item.anidofsomesort }, null)</td>
+                <td>@Html.ActionLink("Form @item.Id", "Fill", "User", new { saved = 0, id = item.anidofsomesort }, null)</td>
             </tr>
         }
     </table>
@@ -49,7 +49,7 @@
         @foreach (var item in Model.submittedForms)
         {
             <tr>
-                <td>@Html.ActionLink("Form @item.Id", "Fill", "User", new { saved = 1, id = @item.anidofsomesort }, null)</td>
+                <td>@Html.ActionLink("Form", "Fill", "User", new { saved = 1, id = item.anidofsomesort }, null)</td>
             </tr>
         }
     </table>

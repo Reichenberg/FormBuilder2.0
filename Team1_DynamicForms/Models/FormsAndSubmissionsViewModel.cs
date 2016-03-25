@@ -8,8 +8,8 @@ namespace Team1_DynamicForms.Models
 {
     public class FormsAndSubmissionsViewModel
     {
-        public List<SubmissionPart> submittedForms { get; set; }
+        public SubmissionWhole submittedForms { get; set; }
 
-        public List<FormPage> unsubmittedForms { get; set; }
+        public WholeForm unsubmittedForms { get; set; }
     }
 }
