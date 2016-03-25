@@ -1,0 +1,11 @@
+﻿@model Team1_DynamicForms.Models.WorkFlowCreateViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Creating Workflow for @Model.FormName</h2>
+
+
+
+@Html.Partial("~/Views/WorkFlow/CreatePartial.cshtml", Model.partialViewModel);
