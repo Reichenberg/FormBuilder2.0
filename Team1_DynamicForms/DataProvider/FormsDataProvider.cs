@@ -77,6 +77,7 @@ namespace Team1_DynamicForms.DataProvider
             }
         }
 
+        
         public bool createAndAddFormSubmission(int formPageId, string userId, FormCollection collection, string finished)
         {
             FormPage formPage = db.GetPage(formPageId);
@@ -284,6 +285,22 @@ namespace Team1_DynamicForms.DataProvider
             return false;
         }
 
+        /// <summary>
+        /// Gets the set of all workflows for current user
+        /// TODO: add ability to group workflows retrieved by type
+        /// </summary>
+        /// <param name="userId">The id of the user to look for</param>
+        /// <returns>Workflows obtained from database</returns>
+        internal WorkFlowGroupViewModel GetWorkFlows(Account user)
+        {
+            try
+            {
+                return db.GetWorkFlows(user);
+            }
+            catch (Exception e)
+            {
+                throw (new Exception("Error retrieving workflows from database"));
+
         //should retrieve a wholeform for a user to view
         // the id number will be used to generate a link to the actual form page
         // wholeFormId used is the id of the form to be retrieved
@@ -315,4 +332,68 @@ namespace Team1_DynamicForms.DataProvider
             }
         }
     }
+}
+
+        /// <summary>
+        /// Creates and adds a new workflow to the database based on the given list of emails
+        /// </summary>
+        /// <param name="userEmails">The users to add to the workflow</param>
+        /// <returns>new workFlows id, negative value if operation failed</returns>
+        internal int CreateAndAddWorkFlow(List<string> userEmails)
+        {
+
+            //Creates workflow with empty type, TODO implement workflow types
+            int workFlow;
+            try {
+                workFlow = db.CreateAndInsertWorkFlow("Standard");
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error creating workflow");
+            }
+
+            try {
+                if (db.AddUsersToWorkFlow(userEmails, workFlow))
+                {
+                    return workFlow;
+                }
+            }
+            catch (Exception e)
+            {
+                throw (new Exception("Error adding user to workflow"));
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Adds a workFlow to an existing form
+        /// </summary>
+        /// <param name="formId">Id of the form being modified</param>
+        /// <param name="workFlowId">Id of the workflow being added</param>
+        internal void AddWorkFlowToForm(int formId, int workFlowId)
+        {
+            db.AddWorkFlowToForm(formId, workFlowId);
+        }
+
+        /// <summary>
+        /// Gets the currently logged in account and returns the formsDB version of that account
+        /// </summary>
+        /// <returns></returns>
+        internal Account GetCurrentAccount(string userId)
+        {
+            return db.GetCurrentAccount();
+        }
+
+        /// <summary>
+        /// Gets a form's name based on the id
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        internal string GetFormName(int formId)
+        {
+            return db.GetFormName(formId);
+        }
+    }
+
+   
 }

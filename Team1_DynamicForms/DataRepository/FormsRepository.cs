@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Team1_DynamicForms.Models;
 
 /// <summary>
@@ -22,6 +26,7 @@ namespace Team1_DynamicForms.DataRepository
         //Connection to database
         private FormsDbAzureConnection db = new FormsDbAzureConnection();
         private bool disposed = false;
+
 
         /// <summary>
         /// Dispose Method for Database

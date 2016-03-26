@@ -23,10 +23,8 @@ namespace Team1_DynamicForms.Controllers
             {
                 // creates an item usint the FormsAndSubmissionsViewModel to allow the user to
                 // view and access submitted and unsubmitted forms
-                var userNameObj = Membership.GetUser().ProviderUserKey;
-                int userName = Convert.ToInt32(userNameObj);
-                //string userName1 = User.Identity.Name;
-                //int userName = int.Parse(userName1);
+                string userName = User.Identity.Name;
+
 
                 FormsAndSubmissionsViewModel formsubmview = new FormsAndSubmissionsViewModel();
                 int NUM = 5;
