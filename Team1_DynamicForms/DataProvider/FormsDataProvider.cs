@@ -127,8 +127,14 @@ namespace Team1_DynamicForms.DataProvider
                                 int insertIndex = Html.IndexOf(item.ToString(), currentFormElement);
                                 if (insertIndex > 0)
                                 {
-                                    newHtml = Html.Insert(insertIndex + item.ToString().Length + 1, " checked ");
-                                    readyForNextItem = true;
+                                    int checkName = Html.IndexOf("name=\"", currentFormElement);
+                                    string checkStringName = Html.Substring(checkName + "name=\"".Length,7);
+
+                                    if (checkStringName.Contains(option))
+                                    {
+                                        newHtml = Html.Insert(insertIndex + item.ToString().Length + 1, " checked ");
+                                        readyForNextItem = true; 
+                                    }
                                 }
                             }
                         }
@@ -165,7 +171,10 @@ namespace Team1_DynamicForms.DataProvider
                         }
                     }
 
-                    Html = newHtml;
+                    if (newHtml != "")
+                    {
+                        Html = newHtml; 
+                    }
                 }
             }
 
@@ -235,8 +244,14 @@ namespace Team1_DynamicForms.DataProvider
                                 int insertIndex = Html.IndexOf(item.ToString(), currentFormElement);
                                 if (insertIndex > 0)
                                 {
-                                    newHtml = Html.Insert(insertIndex + item.ToString().Length + 1, " checked ");
-                                    readyForNextItem = true;
+                                    int checkName = Html.IndexOf("name=\"", currentFormElement);
+                                    string checkStringName = Html.Substring(checkName + "name=\"".Length, 7);
+
+                                    if (checkStringName.Contains(option))
+                                    {
+                                        newHtml = Html.Insert(insertIndex + item.ToString().Length + 1, " checked ");
+                                        readyForNextItem = true;
+                                    }
                                 }
                             }
                         }
@@ -273,7 +288,10 @@ namespace Team1_DynamicForms.DataProvider
                         }
                     }
 
-                    Html = newHtml;
+                    if (newHtml != "")
+                    {
+                        Html = newHtml;
+                    }
                 }
             }
 
