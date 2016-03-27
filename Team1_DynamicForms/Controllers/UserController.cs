@@ -27,13 +27,9 @@ namespace Team1_DynamicForms.Controllers
 
 
                 FormsAndSubmissionsViewModel formsubmview = new FormsAndSubmissionsViewModel();
-                int NUM = 5;
-                int subid = NUM;
 
-                int whformid = NUM;
-
-                formsubmview.submittedForms = db.GetSubmittedFormFromDb(subid, userName);
-                formsubmview.unsubmittedForms = db.GetWholeFormFromDb(whformid);
+                formsubmview.submittedForms = db.GetSubmittedFormFromDb(userName);
+                formsubmview.unsubmittedForms = db.GetWholeFormFromDb();
 
                 return View(formsubmview);
             }

@@ -1,27 +1,23 @@
 ﻿@using Microsoft.AspNet.Identity
+@model Team1_DynamicForms.Models.FormsAndSubmissionsViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <h2>Hello @User.Identity.GetUserName()</h2>
 
-@*
-<hr />
-    @model IEnumerable<Team1_DynamicForms.Models.FormPage>
-<div style="color:blue">
-    @Html.ActionLink("Test Form 1", "Fill", "User", new { saved = 0, id = 1 }, null)
-    @Html.ActionLink("Test Form 2", "Fill", "User", new { saved = 0, id = 2 }, null)
-    @Html.ActionLink("Test Form 3", "Fill", "User", new { saved = 0, id = 3 }, null)
-    @Html.ActionLink("Test Form 4", "Fill", "User", new { saved = 0, id = 4 }, null)
-    @Html.ActionLink("Test Form 5", "Fill", "User", new { saved = 0, id = 5 }, null)
-</div>
-*@
+    <div style="color:blue">
+        @Html.ActionLink("Test Form 1", "Fill", "User", new { saved = 0, id = 1 }, null)
+        @Html.ActionLink("Test Form 2", "Fill", "User", new { saved = 0, id = 2 }, null)
+        @Html.ActionLink("Test Form 3", "Fill", "User", new { saved = 0, id = 3 }, null)
+        @Html.ActionLink("Test Form 4", "Fill", "User", new { saved = 0, id = 4 }, null)
+        @Html.ActionLink("Test Form 5", "Fill", "User", new { saved = 0, id = 5 }, null)
+    </div>
 
-@model Team1_DynamicForms.Models.FormsAndSubmissionsViewModel
-@{
-    ViewBag.Title = "User";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-<h2>User</h2>
 
-@Html.ActionLink("Test Form", "Fill", "User", new { id = 1 }, null)
+
+
 
 <div class="col-lg-6 col-sm-6 col-md-6">
 
@@ -32,10 +28,10 @@
 
 
     <table>
-        @foreach (var item in Model.unsubmittedForms)
+        @foreach (var item in @Model.unsubmittedForms)
         {
             <tr>
-                <td>@Html.ActionLink("Form @item.Id", "Fill", "User", new { saved = 0, id = item.anidofsomesort }, null)</td>
+                <td>@Html.ActionLink("Form @item.Id", "Fill", "User", new { saved = 0, id = item.Id }, null)</td>
             </tr>
         }
     </table>
@@ -46,10 +42,10 @@
         Saved Forms
     </h3>
     <table>
-        @foreach (var item in Model.submittedForms)
+        @foreach (var item in @Model.submittedForms)
         {
             <tr>
-                <td>@Html.ActionLink("Form", "Fill", "User", new { saved = 1, id = item.anidofsomesort }, null)</td>
+                <td>@Html.ActionLink("Form", "Fill", "User", new { saved = 1, id = item.Id }, null)</td>
             </tr>
         }
     </table>

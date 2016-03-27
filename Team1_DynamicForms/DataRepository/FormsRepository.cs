@@ -311,18 +311,21 @@ namespace Team1_DynamicForms.DataRepository
         // is going to be used to generate a link to the actual form page
         // cheers and hope that it works
         // wholeFormId used is the id of the form to be retrieved
-        public WholeForm GetWholeForm(int wholeFormId)
+        public List<WholeForm> GetWholeForm()
         {
-            WholeForm wholeFormToGet = db.WholeForms.Find(wholeFormId);
 
-            var RetrievingWholeForm = db.WholeForms.Where(w => w.Id == wholeFormId);
+            int numberOfWholeForms = db.WholeForms.Count();
 
-            foreach (var itemId in RetrievingWholeForm)
+            List<WholeForm> wholeFormsList = new List<WholeForm>();
+
+            for(int i = 0; i <= numberOfWholeForms; i++)
             {
-                wholeFormToGet = itemId;
+                WholeForm wholeFormToGet = db.WholeForms.ElementAt(i);
+                wholeFormsList.Add(wholeFormToGet);
             }
 
-            return wholeFormToGet;
+
+            return wholeFormsList;
         }
 
         // method to retrieve a submissionwhole for user to view
@@ -332,20 +335,161 @@ namespace Team1_DynamicForms.DataRepository
         // userId allows us to make sure that the user who is trying to access
         // this feature has actually saved their own form and aren't 
         // accessing someone else's
-        public SubmissionWhole GetSubmittedForm(int submissionFormId, int userId)
+        public List<SubmissionWhole> GetSubmittedForm(string userId)
         {
-            SubmissionWhole submittedFormToGet = db.SubmissionWholes.Find(submissionFormId);
+            
+            var numberOfSubmittedForms = db.SubmissionWholes.Where(s => s.Finished == "No").Count();
 
-            var RetrievingSubmittedForm = db.SubmissionWholes.Where(s => (s.FormSubmissionId == submissionFormId))
-                                                                .Where(s => (s.Finished == "No"))
-                                                                .Where(s => (s.AccountId == userId));
+            int integerNumberSubmittedForms = Convert.ToInt32(numberOfSubmittedForms);
 
-            foreach (var itemId in RetrievingSubmittedForm)
+            List<SubmissionWhole> submittedFormsList = new List<SubmissionWhole>();
+            var verifyAccount = db.Accounts.Where(a => a.Name.Equals(userId)).ToList();
+
+            foreach (var account in verifyAccount)
             {
-                submittedFormToGet = itemId;
+                for(int i = 0; i<= integerNumberSubmittedForms; i++)
+                {
+                    SubmissionWhole submittedFormsToGet = db.SubmissionWholes.ElementAt(i);
+                    submittedFormsToGet.AccountId = account.Id;
+                    submittedFormsList.Add(submittedFormsToGet);
+                }
             }
 
-            return submittedFormToGet;
+            return submittedFormsList;
+        }
+
+        /// <summary>
+        /// Gets workflows from database based on user id
+        /// TODO: add ability to grab workflows by type
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        internal WorkFlowGroupViewModel GetWorkFlows(Account user)
+        {
+            WorkFlowGroupViewModel output = new WorkFlowGroupViewModel();
+
+            //Actually use type in future
+            output.Type = "Standard";
+
+            //Get account with matching user id
+
+            //Loop through all attached workflows
+            foreach (var accountFlow in user.AccountWorkflows)
+            {
+                WorkFlow curWorkflow = accountFlow.WorkFlow;
+                //Ignore empty workflow for now, might just want to change db to fix this later, don't like it
+                if (curWorkflow.Id != 1)
+                    output.FormNames.AddRange(curWorkflow.WholeForms.Select(f => f.Name));
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Creates a new WorkFlow and adds it to the database
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <returns>new workflow's id if successful, return negative value otherwise</returns>
+        internal int CreateAndInsertWorkFlow(string Type)
+        {
+            int workFlowID = db.WorkFlows.Max(wf => wf.Id);
+
+            workFlowID = workFlowID < 0 ? 1 : workFlowID + 1;
+            if (workFlowID == 1)
+                workFlowID = 2;
+
+            WorkFlow newWorkflow = new WorkFlow();
+            newWorkflow.Id = workFlowID;
+            newWorkflow.Type = Type;
+
+            db.WorkFlows.Add(newWorkflow);
+            db.SaveChanges();
+
+            return workFlowID;
+        }
+
+        /// <summary>
+        /// Adds users to an existing workflow
+        /// </summary>
+        /// <param name="userEmails">the emails of the users</param>
+        /// <param name="workFlowId">the id of the workflow to add users to</param>
+        /// <returns></returns>
+        internal bool AddUsersToWorkFlow(List<string> userEmails, int workFlowId)
+        {
+            List<int> users = GetUsersByEmail(userEmails);
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                AccountWorkflow newAccountWorkFlow = new AccountWorkflow();
+
+                int accountWorkFlowId = db.AccountWorkflows.Max(acwf => acwf.Id);
+                accountWorkFlowId = accountWorkFlowId < 0 ? 1 : accountWorkFlowId + 1;
+
+                newAccountWorkFlow.Id = accountWorkFlowId;
+                newAccountWorkFlow.Notified = "false";
+                newAccountWorkFlow.Order = i + 1;
+                newAccountWorkFlow.WorkFlowId = workFlowId;
+                newAccountWorkFlow.AccountId = users[i];
+
+                db.AccountWorkflows.Add(newAccountWorkFlow);
+                db.SaveChanges();
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Adds a workFlow to an existing form
+        /// </summary>
+        /// <param name="formId">Id of the form being modified</param>
+        /// <param name="workFlowId">Id of the workflow being added</param>
+        internal void AddWorkFlowToForm(int formId, int workFlowId)
+        {
+            //Add workflow to form
+            var form = db.WholeForms.Where(wf => wf.Id == formId).FirstOrDefault();
+            form.WorkFlowId = workFlowId;
+            db.WholeForms.Attach(form);
+            var entry = db.Entry(form);
+            entry.Property(e => e.WorkFlowId).IsModified = true;
+            entry.Property(e => e.Id).IsModified = false;
+            entry.Property(e => e.AccountId).IsModified = false;
+            entry.Property(e => e.Name).IsModified = false;
+            // other changed properties
+            db.SaveChanges();
+        }
+
+        internal List<int> GetUsersByEmail(List<string> emails)
+        {
+            List<int> users = new List<int>();
+
+            foreach (string email in emails)
+            {
+                users.AddRange(db.Accounts.Where(acc => acc.Name == email).Select(acc => acc.Id));
+            }
+            return users;
+        }
+
+        /// <summary>
+        /// Gets an account based on the user current context's user id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        internal Account GetCurrentAccount()
+        {
+            //Don't question this it just gets the current application user
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            return db.Accounts.Where(u => u.UserId == user.Id).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets a forms name based on its id
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        internal string GetFormName(int formId)
+        {
+            return db.WholeForms.Where(wf => wf.Id == formId).FirstOrDefault().Name;
         }
     }
 }

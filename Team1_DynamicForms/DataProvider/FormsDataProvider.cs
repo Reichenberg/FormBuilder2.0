@@ -300,15 +300,17 @@ namespace Team1_DynamicForms.DataProvider
             catch (Exception e)
             {
                 throw (new Exception("Error retrieving workflows from database"));
+            }
+        }
 
         //should retrieve a wholeform for a user to view
         // the id number will be used to generate a link to the actual form page
         // wholeFormId used is the id of the form to be retrieved
-        public WholeForm GetWholeFormFromDb(int wholeFormId)
+        public List<WholeForm> GetWholeFormFromDb()
         {
             try
             {
-                return db.GetWholeForm(wholeFormId);
+                return db.GetWholeForm();
             }
             catch (Exception e)
             {
@@ -320,19 +322,18 @@ namespace Team1_DynamicForms.DataProvider
         // userId is used to make sure that the forms submitted will have the correct user
             // forms attached to it
         // submissionFormId is the id used to generate the link for the page
-        public SubmissionWhole GetSubmittedFormFromDb(int submissionFormId, int userId)
+        public List<SubmissionWhole> GetSubmittedFormFromDb(string userId)
         {
             try
             {
-                return db.GetSubmittedForm(submissionFormId, userId);
+                return db.GetSubmittedForm(userId);
             }
             catch (Exception e)
             {
                 throw (new Exception("Error retrieving submitted form from database."));
             }
         }
-    }
-}
+   
 
         /// <summary>
         /// Creates and adds a new workflow to the database based on the given list of emails
