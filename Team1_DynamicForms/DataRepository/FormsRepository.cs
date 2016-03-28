@@ -314,15 +314,16 @@ namespace Team1_DynamicForms.DataRepository
         public List<WholeForm> GetWholeForm()
         {
 
-            int numberOfWholeForms = db.WholeForms.Count();
+            var numberOfWholeForms = db.WholeForms.ToList();
 
             List<WholeForm> wholeFormsList = new List<WholeForm>();
 
-            for(int i = 0; i <= numberOfWholeForms; i++)
+            foreach(var unfilledForm in numberOfWholeForms)
             {
-                WholeForm wholeFormToGet = db.WholeForms.ElementAt(i);
-                wholeFormsList.Add(wholeFormToGet);
+                wholeFormsList.Add(unfilledForm);
             }
+                
+            
 
 
             return wholeFormsList;
@@ -335,24 +336,24 @@ namespace Team1_DynamicForms.DataRepository
         // userId allows us to make sure that the user who is trying to access
         // this feature has actually saved their own form and aren't 
         // accessing someone else's
-        public List<SubmissionWhole> GetSubmittedForm(string userId)
+        public List<SubmissionWhole> GetSubmittedForm(string userName)
         {
-            
-            var numberOfSubmittedForms = db.SubmissionWholes.Where(s => s.Finished == "No").Count();
+            var getAccount = db.Accounts.Where(a => a.Name.Equals(userName)).ToList();
 
-            int integerNumberSubmittedForms = Convert.ToInt32(numberOfSubmittedForms);
+            int userId = 0;
+
+            foreach (var account in getAccount)
+            {
+                userId = account.Id;
+            }
+
+            var gettingSubmittedForms = db.SubmissionWholes.Where(sw => sw.AccountId == userId).Where(sw => sw.Finished == "No");
 
             List<SubmissionWhole> submittedFormsList = new List<SubmissionWhole>();
-            var verifyAccount = db.Accounts.Where(a => a.Name.Equals(userId)).ToList();
 
-            foreach (var account in verifyAccount)
+            foreach (var submittedForm in gettingSubmittedForms)
             {
-                for(int i = 0; i<= integerNumberSubmittedForms; i++)
-                {
-                    SubmissionWhole submittedFormsToGet = db.SubmissionWholes.ElementAt(i);
-                    submittedFormsToGet.AccountId = account.Id;
-                    submittedFormsList.Add(submittedFormsToGet);
-                }
+                submittedFormsList.Add(submittedForm);
             }
 
             return submittedFormsList;

@@ -326,30 +326,30 @@ namespace Team1_DynamicForms.DataProvider
         // wholeFormId used is the id of the form to be retrieved
         public List<WholeForm> GetWholeFormFromDb()
         {
-            try
-            {
+            //try
+            //{
                 return db.GetWholeForm();
-            }
-            catch (Exception e)
-            {
-                throw (new Exception("Error retrieving form page from database."));
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    throw (new Exception("Error retrieving form page from database."));
+            //}
         }
 
         //should retrieve a submitted form for a user to view
         // userId is used to make sure that the forms submitted will have the correct user
             // forms attached to it
         // submissionFormId is the id used to generate the link for the page
-        public List<SubmissionWhole> GetSubmittedFormFromDb(string userId)
+        public List<SubmissionWhole> GetSubmittedFormFromDb(string userName)
         {
-            try
-            {
-                return db.GetSubmittedForm(userId);
-            }
-            catch (Exception e)
-            {
-                throw (new Exception("Error retrieving submitted form from database."));
-            }
+           // try
+            //{
+                return db.GetSubmittedForm(userName);
+            //}
+            //catch (Exception e)
+            //{
+             //   throw (new Exception("Error retrieving submitted form from database."));
+            //}
         }
    
 
