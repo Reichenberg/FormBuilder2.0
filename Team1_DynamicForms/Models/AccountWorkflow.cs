@@ -19,8 +19,10 @@ namespace Team1_DynamicForms.Models
         public string Notified { get; set; }
         public int AccountId { get; set; }
         public int WorkFlowId { get; set; }
+        public Nullable<int> SubmissionWholeId { get; set; }
     
         public virtual Account Account { get; set; }
+        public virtual SubmissionWhole SubmissionWhole { get; set; }
         public virtual WorkFlow WorkFlow { get; set; }
     }
 }
