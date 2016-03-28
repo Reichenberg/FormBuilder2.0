@@ -307,6 +307,58 @@ namespace Team1_DynamicForms.DataRepository
             return formPage;
         }
 
+        // method to retrieve a wholeform for a user to view
+        // is going to be used to generate a link to the actual form page
+        // cheers and hope that it works
+        // wholeFormId used is the id of the form to be retrieved
+        public List<WholeForm> GetWholeForm()
+        {
+
+            var numberOfWholeForms = db.WholeForms.ToList();
+
+            List<WholeForm> wholeFormsList = new List<WholeForm>();
+
+            foreach(var unfilledForm in numberOfWholeForms)
+            {
+                wholeFormsList.Add(unfilledForm);
+            }
+                
+            
+
+
+            return wholeFormsList;
+        }
+
+        // method to retrieve a submissionwhole for user to view
+        // is going to be used to generate link to the actual form page
+        // submissionFormId keeps track of the form so that a link to it can be 
+        // generated later
+        // userId allows us to make sure that the user who is trying to access
+        // this feature has actually saved their own form and aren't 
+        // accessing someone else's
+        public List<SubmissionWhole> GetSubmittedForm(string userName)
+        {
+            var getAccount = db.Accounts.Where(a => a.Name.Equals(userName)).ToList();
+
+            int userId = 0;
+
+            foreach (var account in getAccount)
+            {
+                userId = account.Id;
+            }
+
+            var gettingSubmittedForms = db.SubmissionWholes.Where(sw => sw.AccountId == userId).Where(sw => sw.Finished == "No");
+
+            List<SubmissionWhole> submittedFormsList = new List<SubmissionWhole>();
+
+            foreach (var submittedForm in gettingSubmittedForms)
+            {
+                submittedFormsList.Add(submittedForm);
+            }
+
+            return submittedFormsList;
+        }
+
         /// <summary>
         /// Gets workflows from database based on user id
         /// TODO: add ability to grab workflows by type
@@ -396,7 +448,7 @@ namespace Team1_DynamicForms.DataRepository
         {
             //Add workflow to form
             var form = db.WholeForms.Where(wf => wf.Id == formId).FirstOrDefault();
-            form.WorkFlowId = workFlowId;           
+            form.WorkFlowId = workFlowId;
             db.WholeForms.Attach(form);
             var entry = db.Entry(form);
             entry.Property(e => e.WorkFlowId).IsModified = true;
