@@ -105,7 +105,7 @@ namespace Team1_DynamicForms.DataProvider
 
                     int nextSelectType = Html.IndexOf("<select", currentFormElement);
 
-                    if (nextFormType < nextSelectType || nextSelectType < 0)
+                    if ((nextFormType < nextSelectType || nextSelectType < 0) && nextFormType != -1)
                     {
                         currentFormElement = nextFormType + 4;
 
@@ -222,7 +222,7 @@ namespace Team1_DynamicForms.DataProvider
 
                     int nextSelectType = Html.IndexOf("<select", currentFormElement);
 
-                    if (nextFormType < nextSelectType || nextSelectType < 0)
+                    if ((nextFormType < nextSelectType || nextSelectType < 0) && nextFormType != -1)
                     {
                         currentFormElement = nextFormType + 4;
 
