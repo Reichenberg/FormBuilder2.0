@@ -65,7 +65,7 @@ var Header = function () {
 
     //Create form element based on data
     self.CreateElement = function () {
-        var formControl = document.createElement("h2");
+        var formControl = document.createElement("h3");
         formControl.innerText = self.Value();
 
         return formControl;
