@@ -9,9 +9,13 @@
 .body-content {
     padding: 10px 30px 40px 30px;
    background: #ffffff;
-   border: 1px outset rgb(200,200,200);
+   /*border: 1px outset rgb(200,200,200);*/
    border-radius: 2px;
    overflow: hidden;
+   -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.25);
+-moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.25);
+box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.25);
+margin-bottom: 100px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -57,6 +61,7 @@ a:focus{
     background: linear-gradient(to bottom, #003876 0%,#002147 60%);
     padding-top: 5px;
     padding-bottom: 5px;
+    margin-bottom: 60px;
 }
 
 .navbar-brand{
@@ -77,6 +82,38 @@ a:focus{
 
 
 
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
+}
+
+/* Set the fixed height of the footer here */
+.footer {
+      height: 100px;
+    background: #00162e;
+    border-top: 7px solid #f5cf47;
+    -webkit-box-shadow: 0px -1px 2px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px -1px 2px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px -1px 2px 0px rgba(0,0,0,0.5);
+
+}
+
+
+
 
 /*------------------------------------*/
 
@@ -85,7 +122,7 @@ a:focus{
 .button-main{
     padding: 13px;
     
-    background: rgba(0,50,105, .75);
+    background: rgb(0,50,105);
     border-radius: 10px;
     overflow: auto;
     color: white;
