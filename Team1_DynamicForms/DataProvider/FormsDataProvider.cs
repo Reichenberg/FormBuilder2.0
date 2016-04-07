@@ -24,7 +24,13 @@ namespace Team1_DynamicForms.DataProvider
         //Connection to repository
         private FormsRepository db = new FormsRepository();
 
-
+        /// <summary>
+        /// Adds a new account to the database.
+        /// </summary>
+        /// <param name="name">Account Name</param>
+        /// <param name="type">Account Type</param>
+        /// <param name="userId">Id of account</param>
+        /// <returns></returns>
         public bool AddAccount(string name, string type, string userId)
         {
             if(db.AddAccountToDb(name,type,userId))
@@ -78,127 +84,14 @@ namespace Team1_DynamicForms.DataProvider
         }
 
         
-        public bool createAndAddFormSubmission(int formPageId, string userId, FormCollection collection, string finished)
+        /// <summary>
+        /// Fills HTML form code with user input
+        /// </summary>
+        /// <param name="collection">Form input</param>
+        /// <param name="Html">String of raw HTML of the form</param>
+        /// <returns></returns>
+        public string createFilledHtml(FormCollection collection, string Html)
         {
-            FormPage formPage = db.GetPage(formPageId);
-            string Html = formPage.HtmlCode;
-            string newHtml = "";
-            int currentFormElement = 0;
-            int nextFormType = 0;
-            bool readyForNextItem = false;
-
-            foreach (string option in collection)
-            {
-
-                if (option == "Submit")
-                {
-                    break;
-                }
-
-                var item = collection[option];
-                readyForNextItem = false;
-
-
-                while (readyForNextItem == false)
-                {
-                    nextFormType = Html.IndexOf("type", currentFormElement);
-
-                    int nextSelectType = Html.IndexOf("<select", currentFormElement);
-
-                    if ((nextFormType < nextSelectType || nextSelectType < 0) && nextFormType != -1)
-                    {
-                        currentFormElement = nextFormType + 4;
-
-                        string strFormType = Html.Substring(nextFormType, 15);
-
-                        if (strFormType.Contains("text") || strFormType.Contains("time") || strFormType.Contains("date"))
-                        {
-                            int insertIndex = Html.IndexOf("value=\"\"", nextFormType);
-                            if (insertIndex > 0)
-                            {
-                                newHtml = Html.Insert(insertIndex + "value=\"".Length, item.ToString());
-                                readyForNextItem = true;
-                            }
-                        }
-                        else if (strFormType.Contains("radio"))
-                        {
-                            if (option.Contains("radio"))
-                            {
-                                int insertIndex = Html.IndexOf(item.ToString(), currentFormElement);
-                                if (insertIndex > 0)
-                                {
-                                    int checkName = Html.IndexOf("name=\"", currentFormElement);
-                                    string checkStringName = Html.Substring(checkName + "name=\"".Length,7);
-
-                                    if (checkStringName.Contains(option))
-                                    {
-                                        newHtml = Html.Insert(insertIndex + item.ToString().Length + 1, " checked ");
-                                        readyForNextItem = true; 
-                                    }
-                                }
-                            }
-                        }
-                        else if (strFormType.Contains("checkbox"))
-                        {
-                            if (option.ToLower().Contains("checkbox"))
-                            {
-                                int insertIndex = Html.IndexOf("value=\"\"", nextFormType);
-                                if (insertIndex > 0)
-                                {
-                                    newHtml = Html.Insert(insertIndex + "value=\"\"".Length, " checked ");
-                                    readyForNextItem = true;
-                                }
-                            }
-                        }
-
-                    }
-                    else if (nextSelectType < nextFormType || nextFormType < 0)
-                    {
-                        currentFormElement = nextSelectType + 7;
-
-                        if (item.ToString() != "")
-                        {
-                            int insertSelectedIndex = Html.IndexOf(collection[option].ToString(), currentFormElement);
-                            if (insertSelectedIndex > 0)
-                            {
-                                newHtml = Html.Insert(insertSelectedIndex + collection[option].ToString().Length + 1, " selected=\"selected\" ");
-                                readyForNextItem = true;
-                            }
-                        }
-                        else
-                        {
-                            readyForNextItem = true;
-                        }
-                    }
-
-                    if (newHtml != "")
-                    {
-                        Html = newHtml; 
-                    }
-                }
-            }
-
-            db.AddFormSubmission(formPage.Id,userId,Html,finished);
-
-            return true;
-        }
-
-        public SubmissionPart GetSubmissionPart(int submissionWholeId)
-        {
-            try {
-                return db.getSubmissionPart(submissionWholeId);
-            }
-            catch (Exception e)
-            {
-
-                throw (new Exception("Error retrieving saved form page from database"));
-            }
-        }
-
-        public bool UpdateUserSavedForm(int submissionWholeId, FormCollection collection, string finished)
-        {
-            FormPage formPage = db.GetPageFromSubmissionWhole(submissionWholeId);
-            string Html = formPage.HtmlCode;
             string newHtml = "";
             int currentFormElement = 0;
             int nextFormType = 0;
@@ -294,8 +187,61 @@ namespace Team1_DynamicForms.DataProvider
                     }
                 }
             }
+            return newHtml;
+        }
 
-            if(db.UpdateSubmissionWhole(submissionWholeId,Html,finished))
+        /// <summary>
+        /// Creates a new form submission to save or submit a form
+        /// </summary>
+        /// <param name="formPageId"></param>
+        /// <param name="userId"></param>
+        /// <param name="collection"></param>
+        /// <param name="finished"></param>
+        /// <returns></returns>
+        public bool createAndAddFormSubmission(int formPageId, string userId, FormCollection collection, string finished)
+        {
+            FormPage formPage = db.GetPage(formPageId);
+            string Html = formPage.HtmlCode;
+
+            string newHtml = createFilledHtml(collection, Html);
+
+            db.AddFormSubmission(formPage.Id,userId, newHtml, finished);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns a submission part based on it's submission whole id
+        /// </summary>
+        /// <param name="submissionWholeId"></param>
+        /// <returns></returns>
+        public SubmissionPart GetSubmissionPart(int submissionWholeId)
+        {
+            try {
+                return db.getSubmissionPart(submissionWholeId);
+            }
+            catch (Exception e)
+            {
+
+                throw (new Exception("Error retrieving saved form page from database"));
+            }
+        }
+
+        /// <summary>
+        /// Updates a form submission to be saved or submitted.
+        /// </summary>
+        /// <param name="submissionWholeId"></param>
+        /// <param name="collection"></param>
+        /// <param name="finished"></param>
+        /// <returns></returns>
+        public bool UpdateUserSavedForm(int submissionWholeId, FormCollection collection, string finished)
+        {
+            FormPage formPage = db.GetPageFromSubmissionWhole(submissionWholeId);
+            string Html = formPage.HtmlCode;
+
+            string newHtml = createFilledHtml(collection,Html);
+
+            if(db.UpdateSubmissionWhole(submissionWholeId, newHtml, finished))
             {
                 return true;
             }
