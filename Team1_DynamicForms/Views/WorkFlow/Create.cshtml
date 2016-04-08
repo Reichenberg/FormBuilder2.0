@@ -6,6 +6,39 @@
 
 <h2>Creating Workflow for @Model.FormName</h2>
 
+<div id="MemberList">
+@using (Html.BeginForm())
+{
+    <div id="editorRowsMembers">
+        @foreach (var Member in Model.MemberEmails)
+        {
+            Html.RenderPartial("CreatePartial", Member);
+        }
+    </div>
+    @Html.ActionLink("Add", "MemberManager", null, new { id = "addItemMembers", @class = "button" });
+}
+</div>
+<br />
 
 
-@Html.Partial("~/Views/WorkFlow/CreatePartial.cshtml", Model.partialViewModel);
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#addItemMembers').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("addNewMember")',
+                    cache: false,
+                    success: function (html) { $("#editorRowsMembers").append(html); },
+                    error: function (xhr, status, error) {
+                        alert(xhr.responseText);
+                    }
+                });
+                return false;
+            });
+            $('#editorRowsMembers').on('click', '.deleteRow', function () {
+                $(this).closest('.editorRow').remove();
+            });
+        });
+    </script>    
+}

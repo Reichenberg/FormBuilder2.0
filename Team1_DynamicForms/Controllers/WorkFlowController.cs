@@ -48,7 +48,7 @@ namespace Team1_DynamicForms.Controllers
             int formId = 1;
 
             WorkFlowCreateViewModel viewModel = new WorkFlowCreateViewModel();
-            viewModel.partialViewModel.FormId = formId;
+            viewModel.FormId = formId;
             viewModel.FormName = db.GetFormName(formId);
             //viewModel.UserEmails = new List<string>();
             return View(viewModel);
@@ -63,13 +63,22 @@ namespace Team1_DynamicForms.Controllers
         {
             if (ModelState.IsValid)
             {
-                string userEmails = new string(viewModel.UserEmails.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
+                string userEmails = new string(viewModel.Email.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
 
                 var workFlowId = db.CreateAndAddWorkFlow(userEmails.Split(',').ToList());
                 db.AddWorkFlowToForm(1/*viewModel.FormId*/, workFlowId);
                 return RedirectToAction("Index");
             }
             return View();
+        }
+
+        /// <summary>
+        /// Creates and returns a new Empty user item for use in workflows
+        /// </summary>
+        public ActionResult AddNewMember()
+        {
+            var member = new WorkFlowCreatePartialViewModel();
+            return PartialView("CreatePartial",member);
         }
 
     }
