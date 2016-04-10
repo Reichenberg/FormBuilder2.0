@@ -225,13 +225,26 @@
     <Compile Include="Models\AccountWorkflow.cs">
       <DependentUpon>FormsDbAzureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AspNetRole.cs">
+      <DependentUpon>IdentityDbAzureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUser.cs">
+      <DependentUpon>IdentityDbAzureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserClaim.cs">
+      <DependentUpon>IdentityDbAzureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserLogin.cs">
+      <DependentUpon>IdentityDbAzureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\database_firewall_rules.cs">
-      <DependentUpon>FormsDbAzureModel.tt</DependentUpon>
+      <DependentUpon>IdentityDbAzureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FormDisplayView.cs" />
     <Compile Include="Models\FormPage.cs">
       <DependentUpon>FormsDbAzureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FormsAndSubmissionsViewModel.cs" />
     <Compile Include="Models\FormsDbAzureModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -249,6 +262,21 @@
     </Compile>
     <Compile Include="Models\FormSubmission.cs">
       <DependentUpon>FormsDbAzureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IdentityDbAzureModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IdentityDbAzureModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IdentityDbAzureModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IdentityDbAzureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IdentityDbAzureModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IdentityDbAzureModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -323,6 +351,16 @@
       <DependentUpon>FormsDbAzureModel.edmx</DependentUpon>
       <LastGenOutput>FormsDbAzureModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Models\IdentityDbAzureModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IdentityDbAzureModel.edmx</DependentUpon>
+      <LastGenOutput>IdentityDbAzureModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\IdentityDbAzureModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IdentityDbAzureModel.edmx</DependentUpon>
+      <LastGenOutput>IdentityDbAzureModel.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\Admin\AdminVIewModel.js" />
     <Content Include="Scripts\Admin\FormField.js" />
     <Content Include="Scripts\Admin\index.js" />
@@ -345,6 +383,13 @@
     </EntityDeploy>
     <Content Include="Models\FormsDbAzureModel.edmx.diagram">
       <DependentUpon>FormsDbAzureModel.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\IdentityDbAzureModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>IdentityDbAzureModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\IdentityDbAzureModel.edmx.diagram">
+      <DependentUpon>IdentityDbAzureModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\bootbox.js" />

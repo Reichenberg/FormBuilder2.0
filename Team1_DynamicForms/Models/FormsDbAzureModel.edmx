@@ -12,7 +12,7 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="UserId" Type="text" />
+          <Property Name="UserId" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="AccountWorkflow">
           <Key>
@@ -23,6 +23,7 @@
           <Property Name="Notified" Type="nvarchar" MaxLength="50" />
           <Property Name="AccountId" Type="int" Nullable="false" />
           <Property Name="WorkFlowId" Type="int" Nullable="false" />
+          <Property Name="SubmissionWholeId" Type="int" />
         </EntityType>
         <EntityType Name="FormPage">
           <Key>
@@ -103,6 +104,18 @@ warning 6002: The table/view 'FormsDb.sys.database_firewall_rules' does not have
             </Principal>
             <Dependent Role="AccountWorkflow">
               <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountWorkflow_SubmissionWhole">
+          <End Role="SubmissionWhole" Type="Self.SubmissionWhole" Multiplicity="0..1" />
+          <End Role="AccountWorkflow" Type="Self.AccountWorkflow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubmissionWhole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountWorkflow">
+              <PropertyRef Name="SubmissionWholeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -225,6 +238,10 @@ warning 6002: The table/view 'FormsDb.sys.database_firewall_rules' does not have
             <End Role="Account" EntitySet="Account" />
             <End Role="AccountWorkflow" EntitySet="AccountWorkflow" />
           </AssociationSet>
+          <AssociationSet Name="FK_AccountWorkflow_SubmissionWhole" Association="Self.FK_AccountWorkflow_SubmissionWhole">
+            <End Role="SubmissionWhole" EntitySet="SubmissionWhole" />
+            <End Role="AccountWorkflow" EntitySet="AccountWorkflow" />
+          </AssociationSet>
           <AssociationSet Name="FK_AccountWorkflow_WorkFlow" Association="Self.FK_AccountWorkflow_WorkFlow">
             <End Role="WorkFlow" EntitySet="WorkFlow" />
             <End Role="AccountWorkflow" EntitySet="AccountWorkflow" />
@@ -270,7 +287,7 @@ warning 6002: The table/view 'FormsDb.sys.database_firewall_rules' does not have
           <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AccountWorkflows" Relationship="Self.FK_AccountWorkflow_Account" FromRole="Account" ToRole="AccountWorkflow" />
           <NavigationProperty Name="SubmissionWholes" Relationship="Self.FK_SubmissionWhole_AccountId" FromRole="Account" ToRole="SubmissionWhole" />
           <NavigationProperty Name="WholeForms" Relationship="Self.FK_WholeForm_Account" FromRole="Account" ToRole="WholeForm" />
@@ -284,7 +301,9 @@ warning 6002: The table/view 'FormsDb.sys.database_firewall_rules' does not have
           <Property Name="Notified" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AccountId" Type="Int32" Nullable="false" />
           <Property Name="WorkFlowId" Type="Int32" Nullable="false" />
+          <Property Name="SubmissionWholeId" Type="Int32" />
           <NavigationProperty Name="Account" Relationship="Self.FK_AccountWorkflow_Account" FromRole="AccountWorkflow" ToRole="Account" />
+          <NavigationProperty Name="SubmissionWhole" Relationship="Self.FK_AccountWorkflow_SubmissionWhole" FromRole="AccountWorkflow" ToRole="SubmissionWhole" />
           <NavigationProperty Name="WorkFlow" Relationship="Self.FK_AccountWorkflow_WorkFlow" FromRole="AccountWorkflow" ToRole="WorkFlow" />
         </EntityType>
         <EntityType Name="FormPage">
@@ -327,6 +346,7 @@ warning 6002: The table/view 'FormsDb.sys.database_firewall_rules' does not have
           <Property Name="AccountId" Type="Int32" Nullable="false" />
           <Property Name="FormSubmissionId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Account" Relationship="Self.FK_SubmissionWhole_AccountId" FromRole="SubmissionWhole" ToRole="Account" />
+          <NavigationProperty Name="AccountWorkflows" Relationship="Self.FK_AccountWorkflow_SubmissionWhole" FromRole="SubmissionWhole" ToRole="AccountWorkflow" />
           <NavigationProperty Name="FormSubmission" Relationship="Self.FK_SubmissionWhole_FormSubmission" FromRole="SubmissionWhole" ToRole="FormSubmission" />
           <NavigationProperty Name="SubmissionParts" Relationship="Self.FK_SubmissionPart_SubmissionWhole" FromRole="SubmissionWhole" ToRole="SubmissionPart" />
         </EntityType>
@@ -401,6 +421,18 @@ warning 6002: The table/view 'FormsDb.sys.database_firewall_rules' does not have
             </Principal>
             <Dependent Role="WholeForm">
               <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountWorkflow_SubmissionWhole">
+          <End Role="SubmissionWhole" Type="Self.SubmissionWhole" Multiplicity="0..1" />
+          <End Role="AccountWorkflow" Type="Self.AccountWorkflow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubmissionWhole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountWorkflow">
+              <PropertyRef Name="SubmissionWholeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -498,6 +530,10 @@ warning 6002: The table/view 'FormsDb.sys.database_firewall_rules' does not have
             <End Role="Account" EntitySet="Accounts" />
             <End Role="WholeForm" EntitySet="WholeForms" />
           </AssociationSet>
+          <AssociationSet Name="FK_AccountWorkflow_SubmissionWhole" Association="Self.FK_AccountWorkflow_SubmissionWhole">
+            <End Role="SubmissionWhole" EntitySet="SubmissionWholes" />
+            <End Role="AccountWorkflow" EntitySet="AccountWorkflows" />
+          </AssociationSet>
           <AssociationSet Name="FK_AccountWorkflow_WorkFlow" Association="Self.FK_AccountWorkflow_WorkFlow">
             <End Role="WorkFlow" EntitySet="WorkFlows" />
             <End Role="AccountWorkflow" EntitySet="AccountWorkflows" />
@@ -547,6 +583,7 @@ warning 6002: The table/view 'FormsDb.sys.database_firewall_rules' does not have
                 <ScalarProperty Name="Notified" ColumnName="Notified" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="WorkFlowId" ColumnName="WorkFlowId" />
+                <ScalarProperty Name="SubmissionWholeId" ColumnName="SubmissionWholeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

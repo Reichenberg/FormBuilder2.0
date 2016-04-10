@@ -1,22 +1,66 @@
 ﻿@using Microsoft.AspNet.Identity
-@model IEnumerable<Team1_DynamicForms.Models.FormPage>
+@model Team1_DynamicForms.Models.FormsAndSubmissionsViewModel
+
 @{
-    ViewBag.Title = "User";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Hello @User.Identity.GetUserName()</h2>
-<hr />
-<div style="color:blue">
-    @Html.ActionLink("Test Form 1", "Fill", "User", new { saved = 0, id = 1 }, null)
-    @Html.ActionLink("Test Form 2", "Fill", "User", new { saved = 0, id = 2 }, null)
-    @Html.ActionLink("Test Form 3", "Fill", "User", new { saved = 0, id = 3 }, null)
-    @Html.ActionLink("Test Form 4", "Fill", "User", new { saved = 0, id = 4 }, null)
-    @Html.ActionLink("Test Form 5", "Fill", "User", new { saved = 0, id = 5 }, null)
+
+  @* <div style="color:blue">
+        @Html.ActionLink("Test Form 1", "Fill", "User", new { saved = 0, id = 1 }, null)
+        @Html.ActionLink("Test Form 2", "Fill", "User", new { saved = 0, id = 2 }, null)
+        @Html.ActionLink("Test Form 3", "Fill", "User", new { saved = 0, id = 3 }, null)
+        @Html.ActionLink("Test Form 4", "Fill", "User", new { saved = 0, id = 4 }, null)
+        @Html.ActionLink("Test Form 5", "Fill", "User", new { saved = 0, id = 5 }, null)
+    </div>*@
+
+
+
+
+
+<div class="col-lg-6 col-sm-6 col-md-6">
+
+    <h3>
+        Forms To Fill
+    </h3>
+
+
+
+    <table>
+        @foreach (var item in @Model.unsubmittedForms)
+        {
+            <tr>
+                <td>@Html.ActionLink("Unfilled Form", "Fill", "User", new { saved = 0, id = item.Id }, null)</td>
+            </tr>
+        }
+    </table>
 </div>
 
-<div class="row">
-    <div class="col-md-3">
-        <a class="button-main" href="/WorkFlow/Index"><span class="glyphicon glyphicon-plus"></span> Workflows</a>
+@if (Model.submittedForms != null)
+{
+    <div class="col-lg-6 col-sm-6 col-md-6">
+        <h3>
+            Saved Forms
+        </h3>
+        <table>
+            @foreach (var item in @Model.submittedForms)
+            {
+                <tr>
+                    <td>@Html.ActionLink("Form", "Fill", "User", new { saved = 1, id = item.Id }, null)</td>
+                </tr>
+            }
+        </table>
     </div>
-</div>
+}
+else
+{     
+    <div class="col-lg-6 col-sm-6 col-md-6">
+        <h3>
+            No Saved Forms Available
+        </h3>
+    </div>
+}
+
+
+

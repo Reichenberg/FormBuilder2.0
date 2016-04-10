@@ -17,6 +17,7 @@ namespace Team1_DynamicForms.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SubmissionWhole()
         {
+            this.AccountWorkflows = new HashSet<AccountWorkflow>();
             this.SubmissionParts = new HashSet<SubmissionPart>();
         }
     
@@ -27,6 +28,8 @@ namespace Team1_DynamicForms.Models
         public int FormSubmissionId { get; set; }
     
         public virtual Account Account { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AccountWorkflow> AccountWorkflows { get; set; }
         public virtual FormSubmission FormSubmission { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SubmissionPart> SubmissionParts { get; set; }

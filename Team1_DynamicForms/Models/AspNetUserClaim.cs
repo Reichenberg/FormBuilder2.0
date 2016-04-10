@@ -12,17 +12,13 @@ namespace Team1_DynamicForms.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class AccountWorkflow
+    public partial class AspNetUserClaim
     {
         public int Id { get; set; }
-        public int Order { get; set; }
-        public string Notified { get; set; }
-        public int AccountId { get; set; }
-        public int WorkFlowId { get; set; }
-        public Nullable<int> SubmissionWholeId { get; set; }
+        public string UserId { get; set; }
+        public string ClaimType { get; set; }
+        public string ClaimValue { get; set; }
     
-        public virtual Account Account { get; set; }
-        public virtual SubmissionWhole SubmissionWhole { get; set; }
-        public virtual WorkFlow WorkFlow { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
     }
 }
