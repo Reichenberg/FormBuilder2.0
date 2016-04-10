@@ -26,11 +26,6 @@ namespace Team1_DynamicForms.Models
      
     public class WorkFlowCreateViewModel
     {
-        public WorkFlowCreateViewModel()
-        {
-            MemberEmails = new List<WorkFlowCreatePartialViewModel>();
-            MemberEmails.Add(new WorkFlowCreatePartialViewModel());
-        }
         public string FormName { get; set; }
         public int FormId { get; set; }
         public List<WorkFlowCreatePartialViewModel> MemberEmails { get; set; }

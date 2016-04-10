@@ -9,6 +9,10 @@
 <div id="MemberList">
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.FormId);
+
     <div id="editorRowsMembers">
         @foreach (var Member in Model.MemberEmails)
         {
@@ -16,6 +20,11 @@
         }
     </div>
     @Html.ActionLink("Add", "MemberManager", null, new { id = "addItemMembers", @class = "button" });
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
 }
 </div>
 <br />

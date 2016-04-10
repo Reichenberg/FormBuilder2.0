@@ -50,7 +50,8 @@ namespace Team1_DynamicForms.Controllers
             WorkFlowCreateViewModel viewModel = new WorkFlowCreateViewModel();
             viewModel.FormId = formId;
             viewModel.FormName = db.GetFormName(formId);
-            //viewModel.UserEmails = new List<string>();
+            viewModel.MemberEmails = new List<WorkFlowCreatePartialViewModel>();
+            viewModel.MemberEmails.Add(new WorkFlowCreatePartialViewModel());
             return View(viewModel);
         }
 
@@ -59,14 +60,13 @@ namespace Team1_DynamicForms.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(WorkFlowCreatePartialViewModel viewModel)
+        public ActionResult Create(WorkFlowCreateViewModel workFlowCreateViewModel)
         {
             if (ModelState.IsValid)
             {
-                string userEmails = new string(viewModel.Email.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
 
-                var workFlowId = db.CreateAndAddWorkFlow(userEmails.Split(',').ToList());
-                db.AddWorkFlowToForm(1/*viewModel.FormId*/, workFlowId);
+                var workFlowId = db.CreateAndAddWorkFlow(workFlowCreateViewModel.MemberEmails.Select(m => m.Email).ToList());
+                db.AddWorkFlowToForm(workFlowCreateViewModel.FormId, workFlowId);
                 return RedirectToAction("Index");
             }
             return View();
