@@ -148,6 +148,49 @@ hr{
    border-top: 7px solid #f5cf47;
 }
 
+.sectionOptions{
+    width: 100%;
+    padding-left:0px;
+    
+}
+
+.sectionOptions a{
+
+    color: rgb(60,60,60);
+    font-weight: bold;
+}
+
+.sectionOptions a:hover{
+    text-decoration: none;
+}
+
+.sectionOptions a li{
+transition: padding cubic-bezier(.93,0,.09,1) .3s, linear .2s
+            ,font-size cubic-bezier(.93,0,.09,1) .3s;
+
+}
+
+.sectionOptions a:hover li{
+        background-color: rgb(230,230,230);
+        padding-top: 11px;
+        padding-bottom: 7px;
+        font-size: 16px;
+
+}
+
+.sectionOptions li {
+    list-style-type: none;
+    padding-top: 7px;
+    padding-bottom: 4px;
+    padding-left: 5px;
+    border-bottom: 1px solid black;
+}
+
+.sectionOptions a:visited{
+       color: black !important;
+
+}
+
 
 /*------------------------------------*/
 

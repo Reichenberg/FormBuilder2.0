@@ -24,14 +24,18 @@
                 Forms To Fill
             </h3>
             <hr />
-            <table>
+            <ul class="sectionOptions">
                 @foreach (var item in @Model.unsubmittedForms)
                 {
-                    <tr>
-                        <td>@Html.ActionLink(item.Name, "Fill", "User", new { saved = 0, id = item.Id }, null)</td>
-                    </tr>
+                    
+                        <a href="/user/fill/@item.Id?saved=0">
+                            <li>
+                                @item.Name
+                            </li>
+                        </a>
+                    
                 }
-            </table>
+            </ul>
         </div>
 
         <div class="col-md-1"></div>
@@ -42,14 +46,14 @@
                 Saved Forms
             </h3>
             <hr />
-            <table>
+            <ul class="sectionOptions">
                 @foreach (var item in @Model.submittedForms)
                 {
-                    <tr>
-                        <td>@Html.ActionLink(item.FormSubmission.WholeForm.Name, "Fill", "User", new { saved = 1, id = item.Id }, null)</td>
-                    </tr>
+                    <li>
+                        @Html.ActionLink(item.FormSubmission.WholeForm.Name, "Fill", "User", new { saved = 1, id = item.Id }, null)
+                    </li>
                 }
-            </table>
+            </ul>
         </div>
 
     </div>
