@@ -25,7 +25,7 @@ namespace Team1_DynamicForms.Controllers
 
             //Add multiple to check for different types, might move logic around later
             var userId = User.Identity.GetUserId();
-            WorkFlowGroupViewModel groupModel = db.GetWorkFlows(db.GetCurrentAccount(userId));
+            WorkFlowGroupViewModel groupModel = db.GetWorkFlows(db.GetCurrentAccount());
 
             viewModel.Workflows.Add(groupModel);
 
@@ -39,13 +39,27 @@ namespace Team1_DynamicForms.Controllers
             return View();
         }
 
-        // GET: Workflows/Create
-        //   public ActionResult Create(int formId)
-        public ActionResult Create()
+        // Get: Workflows/CreateIndex
+        public ActionResult CreateIndex()
         {
+            return View(db.GetFormNamesAndIDs(db.GetCurrentAccount()));
+        }
 
-            //Will need to later modifiy this to actually take in formId, for now just default to 1
-            int formId = 1;
+        // POST: Workflows/CreateIndex
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateIndex(WorkFlowCreateIndexViewModel workFlowCreateIndexViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Create", new { formId = workFlowCreateIndexViewModel.SelectedIndex });
+            }
+            return View(workFlowCreateIndexViewModel);
+        }
+
+        // GET: Workflows/Create
+        public ActionResult Create(int formId)
+        {
 
             WorkFlowCreateViewModel viewModel = new WorkFlowCreateViewModel();
             viewModel.FormId = formId;
@@ -66,8 +80,13 @@ namespace Team1_DynamicForms.Controllers
             {
 
                 var workFlowId = db.CreateAndAddWorkFlow(workFlowCreateViewModel.MemberEmails.Select(m => m.Email).ToList());
-                db.AddWorkFlowToForm(workFlowCreateViewModel.FormId, workFlowId);
-                return RedirectToAction("Index");
+                if(workFlowId < 0)
+                {
+                    return View(workFlowCreateViewModel);
+                }
+                if (db.AddWorkFlowToForm(workFlowCreateViewModel.FormId, workFlowId))
+                    return RedirectToAction("Index");
+                else return View(workFlowCreateViewModel);
             }
             return View();
         }

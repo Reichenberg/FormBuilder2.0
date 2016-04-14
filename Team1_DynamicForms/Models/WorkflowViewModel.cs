@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace Team1_DynamicForms.Models
 {
@@ -24,9 +25,17 @@ namespace Team1_DynamicForms.Models
         public List<string> FormNames { get; set; }
     }
      
+    public class WorkFlowCreateIndexViewModel
+    {
+        public IEnumerable<SelectListItem> Forms { get; set; }
+        [Required]
+        public int SelectedIndex { get; set; }
+    }
+
     public class WorkFlowCreateViewModel
     {
         public string FormName { get; set; }
+        [Required]
         public int FormId { get; set; }
         public List<WorkFlowCreatePartialViewModel> MemberEmails { get; set; }
     }
@@ -35,5 +44,4 @@ namespace Team1_DynamicForms.Models
     {
         public string Email { get; set; }
     }
-
 }
