@@ -25,7 +25,7 @@ namespace Team1_DynamicForms.Controllers
 
             //Add multiple to check for different types, might move logic around later
             var userId = User.Identity.GetUserId();
-            WorkFlowGroupViewModel groupModel = db.GetWorkFlows(db.GetCurrentAccount(userId));
+            WorkFlowGroupViewModel groupModel = db.GetWorkFlows(db.GetCurrentAccount());
 
             viewModel.Workflows.Add(groupModel);
 
@@ -39,18 +39,33 @@ namespace Team1_DynamicForms.Controllers
             return View();
         }
 
+        // Get: Workflows/CreateIndex
+        public ActionResult CreateIndex()
+        {
+            return View(db.GetFormNamesAndIDs(db.GetCurrentAccount()));
+        }
+
+        // POST: Workflows/CreateIndex
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateIndex(WorkFlowCreateIndexViewModel workFlowCreateIndexViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Create", new { formId = workFlowCreateIndexViewModel.SelectedIndex });
+            }
+            return View(workFlowCreateIndexViewModel);
+        }
+
         // GET: Workflows/Create
-        //   public ActionResult Create(int formId)
-        public ActionResult Create()
+        public ActionResult Create(int formId)
         {
 
-            //Will need to later modifiy this to actually take in formId, for now just default to 1
-            int formId = 1;
-
             WorkFlowCreateViewModel viewModel = new WorkFlowCreateViewModel();
-            viewModel.partialViewModel.FormId = formId;
+            viewModel.FormId = formId;
             viewModel.FormName = db.GetFormName(formId);
-            //viewModel.UserEmails = new List<string>();
+            viewModel.MemberEmails = new List<WorkFlowCreatePartialViewModel>();
+            viewModel.MemberEmails.Add(new WorkFlowCreatePartialViewModel());
             return View(viewModel);
         }
 
@@ -59,17 +74,30 @@ namespace Team1_DynamicForms.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(WorkFlowCreatePartialViewModel viewModel)
+        public ActionResult Create(WorkFlowCreateViewModel workFlowCreateViewModel)
         {
             if (ModelState.IsValid)
             {
-                string userEmails = new string(viewModel.UserEmails.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
 
-                var workFlowId = db.CreateAndAddWorkFlow(userEmails.Split(',').ToList());
-                db.AddWorkFlowToForm(1/*viewModel.FormId*/, workFlowId);
-                return RedirectToAction("Index");
+                var workFlowId = db.CreateAndAddWorkFlow(workFlowCreateViewModel.MemberEmails.Select(m => m.Email).ToList());
+                if(workFlowId < 0)
+                {
+                    return View(workFlowCreateViewModel);
+                }
+                if (db.AddWorkFlowToForm(workFlowCreateViewModel.FormId, workFlowId))
+                    return RedirectToAction("Index");
+                else return View(workFlowCreateViewModel);
             }
             return View();
+        }
+
+        /// <summary>
+        /// Creates and returns a new Empty user item for use in workflows
+        /// </summary>
+        public ActionResult AddNewMember()
+        {
+            var member = new WorkFlowCreatePartialViewModel();
+            return PartialView("CreatePartial",member);
         }
 
     }
