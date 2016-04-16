@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using Team1_DynamicForms.Models;
 using Team1_DynamicForms.DataProvider;
 using Microsoft.AspNet.Identity;
+using System.Net;
+using System.Net.Mail;
 
 namespace Team1_DynamicForms.Controllers
 {
