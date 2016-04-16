@@ -6,6 +6,48 @@
 
 <h2>Creating Workflow for @Model.FormName</h2>
 
+<div id="MemberList">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.FormId);
+
+    <div id="editorRowsMembers">
+        @foreach (var Member in Model.MemberEmails)
+        {
+            Html.RenderPartial("CreatePartial", Member);
+        }
+    </div>
+    @Html.ActionLink("Add", "MemberManager", null, new { id = "addItemMembers", @class = "button" });
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+}
+</div>
+<br />
 
 
-@Html.Partial("~/Views/WorkFlow/CreatePartial.cshtml", Model.partialViewModel);
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#addItemMembers').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("addNewMember")',
+                    cache: false,
+                    success: function (html) { $("#editorRowsMembers").append(html); },
+                    error: function (xhr, status, error) {
+                        alert(xhr.responseText);
+                    }
+                });
+                return false;
+            });
+            $('#editorRowsMembers').on('click', '.button-main', function () {
+                $(this).closest('.editorRow').remove();
+            });
+        });
+    </script>    
+}
