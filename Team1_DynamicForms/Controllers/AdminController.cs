@@ -25,6 +25,11 @@ namespace Team1_DynamicForms.Controllers
             return View();
         }
 
+        public ActionResult CreateFormWorkFlow()
+        {
+            return View();
+        }
+
         /// <summary>
         /// Adds a new form to the database
         /// </summary>

@@ -5,6 +5,10 @@
     self.FormName = ko.observable();
     self.nameClass = ko.observable("");
 
+    //Workflow data
+    self.WorkFlow = ko.observableArray();
+    self.HasWorkFlow = ko.observable(false);
+
     self.toggleFieldOptions = ko.observable(true);
     self.optionVal = ko.observable();
 
@@ -117,5 +121,22 @@
             self.Form = document.createElement('div');
             self.Form.setAttribute("id", "Form");
         }
+    }
+
+    //Workflow functions
+    //Event to add new member
+    self.addWorkFlowMember = function () {
+        alert("Adding new member");
+        self.WorkFlow.push(new WorkFlowMember(""));
+    }
+    //Event to remove member
+    self.removeMember = function (member) {
+        alert("Removing member");
+        self.WorkFlow.remove(member);
+    }
+    //Event to toggle whether a workflow is added or not
+    self.toggleHasWorkFlow = function () {
+        alert("Toggling workflow");
+        self.HasWorkFlow(!self.HasWorkFlow());
     }
 }
