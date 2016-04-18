@@ -183,7 +183,11 @@ transition: padding cubic-bezier(.93,0,.09,1) .3s, linear .2s
     padding-top: 7px;
     padding-bottom: 4px;
     padding-left: 5px;
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid rgb(175,175,175);
+}
+
+.sectionOptions a:last-child li{
+    border-bottom:none;
 }
 
 .sectionOptions a:visited{
