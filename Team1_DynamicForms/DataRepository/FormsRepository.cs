@@ -329,6 +329,8 @@ namespace Team1_DynamicForms.DataRepository
             return wholeFormsList;
         }
 
+
+
         // method to retrieve a submissionwhole for user to view
         // is going to be used to generate link to the actual form page
         // submissionFormId keeps track of the form so that a link to it can be 
@@ -419,10 +421,17 @@ namespace Team1_DynamicForms.DataRepository
         {
             List<int> users = GetUsersByEmail(userEmails);
 
+            //If not all emails have accounts attached, invalid emails where passed in.
+            if(users.Count != userEmails.Count)
+            {
+                return false;
+            }
+
             for (int i = 0; i < users.Count; i++)
             {
                 AccountWorkflow newAccountWorkFlow = new AccountWorkflow();
 
+                //Ensure new id is one higher than existing values
                 int accountWorkFlowId = db.AccountWorkflows.Max(acwf => acwf.Id);
                 accountWorkFlowId = accountWorkFlowId < 0 ? 1 : accountWorkFlowId + 1;
 
@@ -492,5 +501,15 @@ namespace Team1_DynamicForms.DataRepository
         {
             return db.WholeForms.Where(wf => wf.Id == formId).FirstOrDefault().Name;
         }
+        /// <summary>
+        /// Returns forms created by a given user in a dictionary pairing form id and form name
+        /// </summary>
+        /// <param name="user">User to look up forms created by</param>
+        /// <returns>Dictionary pairing id and form name</returns>
+        internal Dictionary<int, string> GetCreatedFormsDict(Account user)
+        {
+            return db.WholeForms.Where(wf => wf.AccountId == user.Id).ToDictionary(wf => wf.Id, wf => wf.Name);
+        }
+
     }
 }

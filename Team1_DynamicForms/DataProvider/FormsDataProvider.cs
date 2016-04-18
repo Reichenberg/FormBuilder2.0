@@ -267,6 +267,28 @@ namespace Team1_DynamicForms.DataProvider
             }
         }
 
+        /// <summary>
+        /// Gets the names and ids of the forms created by a specific user.
+        /// </summary>
+        /// <param name="user">The user to look up the forms for</param>
+        /// <returns></returns>
+        internal WorkFlowCreateIndexViewModel GetFormNamesAndIDs(Account user)
+        {
+            try
+            {
+                WorkFlowCreateIndexViewModel viewModel = new WorkFlowCreateIndexViewModel();
+
+                var Forms = db.GetCreatedFormsDict(user);
+                viewModel.Forms = Forms.Select(x => new SelectListItem { Value = x.Key.ToString(), Text = x.Value });
+
+                return viewModel;
+            }
+            catch (Exception e)
+            {
+                throw (new Exception("Error retrieving Workflows for current user from database"));
+            }
+        }
+
         //should retrieve a wholeform for a user to view
         // the id number will be used to generate a link to the actual form page
         // wholeFormId used is the id of the form to be retrieved
@@ -317,10 +339,15 @@ namespace Team1_DynamicForms.DataProvider
                 throw new Exception("Error creating workflow");
             }
 
+            //Add users and create AccountWorkflow table entries.
             try {
                 if (db.AddUsersToWorkFlow(userEmails, workFlow))
                 {
                     return workFlow;
+                }
+                else
+                {
+                    return -1;
                 }
             }
             catch (Exception e)
@@ -335,16 +362,18 @@ namespace Team1_DynamicForms.DataProvider
         /// </summary>
         /// <param name="formId">Id of the form being modified</param>
         /// <param name="workFlowId">Id of the workflow being added</param>
-        internal void AddWorkFlowToForm(int formId, int workFlowId)
+        /// <returns>Bool representing succes</returns>
+        internal bool AddWorkFlowToForm(int formId, int workFlowId)
         {
             db.AddWorkFlowToForm(formId, workFlowId);
+            return true;
         }
 
         /// <summary>
         /// Gets the currently logged in account and returns the formsDB version of that account
         /// </summary>
-        /// <returns></returns>
-        internal Account GetCurrentAccount(string userId)
+        /// <returns>Currently logged in account</returns>
+        internal Account GetCurrentAccount()
         {
             return db.GetCurrentAccount();
         }
