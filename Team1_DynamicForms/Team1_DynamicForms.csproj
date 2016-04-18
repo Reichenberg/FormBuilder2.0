@@ -469,6 +469,7 @@
     <Content Include="Views\WorkFlow\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\WorkFlow\CreateIndex.cshtml" />
+    <Content Include="Views\Admin\CreateFormWorkFlow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
