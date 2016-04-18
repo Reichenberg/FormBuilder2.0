@@ -134,8 +134,8 @@
         </div>
 
         <div class="row">
-            <input type="checkbox" data-bind="value: 'Attach workflow?', click:toggleHasWorkflow()"/>
-            <div data-bind="visible: $root.hasWorkflow()">
+            <label for="workflowToggle"><input type="checkbox" data-bind="checked: HasWorkflow" />Attach workflow?</label>
+            <div data-bind="visible: $root.HasWorkflow">
                 <table>
                     <thead>
                         <tr>
