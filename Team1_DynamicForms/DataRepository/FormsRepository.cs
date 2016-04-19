@@ -483,7 +483,8 @@ namespace Team1_DynamicForms.DataRepository
         // Sends out a notification email to workflow members who need to 
         //  check off part of a form
         // 
-
+        //should probably go if ( workflow has emails attached to a notification) then
+        // (where notify id == id) send email to this email
 
 
         /// <summary>
