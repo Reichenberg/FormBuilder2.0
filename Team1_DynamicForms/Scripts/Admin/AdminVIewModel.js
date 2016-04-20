@@ -6,7 +6,8 @@
     self.nameClass = ko.observable("");
 
     //Workflow data
-    self.WorkFlow = ko.observableArray();
+    self.WorkFlowMembers = ko.observableArray();
+    self.WorkFlow = "";
     self.HasWorkFlow = ko.observable(false);
 
     self.toggleFieldOptions = ko.observable(true);
@@ -96,6 +97,12 @@
         else {
             $("#formName").removeClass("has-error", 0, 0, 0);
             self.nameClass("");
+
+            for (var i = 0; i < self.WorkFlowMembers().length - 1; i++) {
+                self.WorkFlow += self.WorkFlowMembers()[i].memberEmail() + ',';
+            }
+            self.WorkFlow += self.WorkFlowMembers()[self.WorkFlowMembers().length - 1].memberEmail();
+
             for (var i = 0; i < self.FormFields().length; i++) {
                 self.Form.appendChild(self.FormFields()[i].CreateElement());
                 if (self.FormFields()[i].Type() === "header") {
@@ -109,7 +116,7 @@
                 data: {
                     formName: self.FormName(),
                     formHtml: self.Form,
-                    workflow: 0
+                    workFlow: self.WorkFlow
                 },
                 success: function (data) {
                     bootbox.alert(data.Message);
@@ -125,18 +132,12 @@
 
     //Workflow functions
     //Event to add new member
-    self.addWorkFlowMember = function () {
-        alert("Adding new member");
-        self.WorkFlow.push(new WorkFlowMember(""));
+    self.addMember = function () {
+        self.WorkFlowMembers.push(new WorkFlowMember(""));
     }
     //Event to remove member
     self.removeMember = function (member) {
-        alert("Removing member");
-        self.WorkFlow.remove(member);
+        self.WorkFlowMembers.remove(member);
     }
-    //Event to toggle whether a workflow is added or not
-    self.toggleHasWorkFlow = function () {
-        alert("Toggling workflow");
-        self.HasWorkFlow(!self.HasWorkFlow());
-    }
+
 }

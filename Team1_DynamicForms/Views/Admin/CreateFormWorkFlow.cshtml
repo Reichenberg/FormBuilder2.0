@@ -134,22 +134,29 @@
         </div>
 
         <div class="row">
-            <label for="workflowToggle"><input type="checkbox" data-bind="checked: HasWorkflow" />Attach workflow?</label>
-            <div data-bind="visible: $root.HasWorkflow">
+        <label for="workflowToggle">
+            <input type="checkbox" data-bind="checked: HasWorkFlow" />Attach workflow?
+        </label>
+            <div data-bind="visible: HasWorkFlow">
                 <table>
                     <thead>
                         <tr>
-                            <th>Member Email</th><th></th>
+                            <th>Member Email</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach: $root.WorkFlow()">
+                    <tbody data-bind="foreach: WorkFlowMembers">
                         <tr>
-                            <td><input data-bind="value: memberEmail"/></td>
-                            <td><a href="#" data-bind="click: $root.removeMember()">Remove</a></td>
+                            <td>
+                                <input data-bind="value: memberEmail" />
+                            </td>
+                            <td>
+                                <a href="#" data-bind="click: $root.removeMember">Remove</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-                <button data-bind="click: $root.addMember()">Add another member to workflow</button>
+                <button data-bind="click: addMember">Add another member to workflow</button>
             </div>
         </div>
 

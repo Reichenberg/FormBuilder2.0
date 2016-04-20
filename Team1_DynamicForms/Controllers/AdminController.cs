@@ -35,11 +35,11 @@ namespace Team1_DynamicForms.Controllers
         /// </summary>
         /// <param name="formName">Name of the form to add</param>
         /// <param name="formHtml">Form Html</param>
-        /// <param name="workflow">Specified workflow to be attached to the form</param>
+        /// <param name="workFlow">Specified workflow to be attached to the form</param>
         /// <returns>Json response indicating failure or success</returns>
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AddForm(string formName, string formHtml, int workflow)
+        public ActionResult AddForm(string formName, string formHtml, string workFlow)
         {
             try
             {
@@ -51,15 +51,23 @@ namespace Team1_DynamicForms.Controllers
                     return Json(fail);
                 }
 
-                string creatorAccount = User.Identity.GetUserName();
-
-                if (db.AddFormToDb(formName, formHtml, workflow, creatorAccount))
+                int workFlowID = db.CreateAndAddWorkFlow(workFlow.Split(',').ToList());
+                if (workFlowID < 0)
                 {
-                    return Json(success);
+                    return Json(fail);
                 }
                 else
                 {
-                    return Json(fail);
+                    string creatorAccount = User.Identity.GetUserName();
+
+                    if (db.AddFormToDb(formName, formHtml, workFlowID, creatorAccount))
+                    {
+                        return Json(success);
+                    }
+                    else
+                    {
+                        return Json(fail);
+                    }
                 }
 
             }
