@@ -60,6 +60,8 @@ namespace Team1_DynamicForms.Controllers
                 formCodeToDisplay.idForCode = formPage.Id;
                 formCodeToDisplay.htmlOfPage = formPage.HtmlCode;
                 formCodeToDisplay.saved = (int)saved;
+                //TEMPORARY THIS SHOULD BE IN A VIEW MODEL FOR THE PAGE, along with the other info
+                ViewBag.FormName = formPage.WholeForm.Name;
             }
             else if (saved == 1)
             {
@@ -72,6 +74,8 @@ namespace Team1_DynamicForms.Controllers
                 formCodeToDisplay.idForCode = partFilledFormPage.Id;
                 formCodeToDisplay.htmlOfPage = partFilledFormPage.HtmlCode;
                 formCodeToDisplay.saved = (int)saved;
+                //TEMPORARY THIS SHOULD BE IN A VIEW MODEL FOR THE PAGE, along with the other info
+                ViewBag.FormName = partFilledFormPage.SubmissionWhole.FormSubmission.WholeForm.Name;
             }
 
              return View(formCodeToDisplay);
