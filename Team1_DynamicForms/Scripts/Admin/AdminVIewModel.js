@@ -78,6 +78,8 @@
         $('.timepicker').timepicker();
     }
 
+    //Purpose: Pass form to controller
+    //Checks for various errors and sends data using ajax
     self.SubmitForm = function () {
         if(self.FormFields().length <= 0)
         {
@@ -104,7 +106,7 @@
                 url: "/Admin/AddForm",
                 data: {
                     formName: self.FormName(),
-                    formHtml: self.Form,
+                    formHtml: window.escape(self.Form), //encodes the html for controller to decode(secure)
                     workflow: 0
                 },
                 success: function (data) {

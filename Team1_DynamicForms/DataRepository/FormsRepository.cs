@@ -27,13 +27,13 @@ namespace Team1_DynamicForms.DataRepository
         private FormsDbAzureConnection db = new FormsDbAzureConnection();
         private bool disposed = false;
 
-
+        
         /// <summary>
         /// Dispose Method for Database
         /// </summary>
         /// <param name="disposing">Confirm Disposing of database</param>
         protected virtual void Dispose(bool disposing)
-        {
+        {        
             if (!this.disposed)
             {
                 if (disposing)

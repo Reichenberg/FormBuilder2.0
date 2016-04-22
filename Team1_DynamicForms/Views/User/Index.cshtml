@@ -33,7 +33,6 @@
                                 @item.Name
                             </li>
                         </a>
-                    
                 }
             </ul>
         </div>
@@ -49,9 +48,12 @@
             <ul class="sectionOptions">
                 @foreach (var item in @Model.submittedForms)
                 {
-                    <li>
-                        @Html.ActionLink(item.FormSubmission.WholeForm.Name, "Fill", "User", new { saved = 1, id = item.Id }, null)
-                    </li>
+
+                    <a href="/user/fill/@item.Id?saved=1">
+                        <li>
+                            @item.FormSubmission.WholeForm.Name
+                        </li>
+                    </a>
                 }
             </ul>
         </div>
