@@ -11,6 +11,7 @@ namespace Team1_DynamicForms.Controllers
     [Authorize(Roles = "Admin,SuperAdmin")]
     public class AdminController : Controller
     {
+        
         //Connection to DataProvider
         private FormsDataProvider db = new FormsDataProvider();
 
@@ -38,11 +39,13 @@ namespace Team1_DynamicForms.Controllers
         /// <param name="workFlow">Specified workflow to be attached to the form</param>
         /// <returns>Json response indicating failure or success</returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult AddForm(string formName, string formHtml, string workFlow)
         {
+
             try
             {
+
+                formHtml = HttpUtility.UrlDecode(formHtml);
                 var fail = new { Success = "False", Message = "Form Cannot Be Empty." };
                 var success = new { Success = "True", Message = "Form Successfully Added" };
                 if (String.IsNullOrWhiteSpace(formHtml))
@@ -58,16 +61,16 @@ namespace Team1_DynamicForms.Controllers
                 }
                 else
                 {
-                    string creatorAccount = User.Identity.GetUserName();
+                string creatorAccount = User.Identity.GetUserName();
 
                     if (db.AddFormToDb(formName, formHtml, workFlowID, creatorAccount))
-                    {
-                        return Json(success);
-                    }
-                    else
-                    {
-                        return Json(fail);
-                    }
+                {
+                    return Json(success);
+                }
+                else
+                {
+                    return Json(fail);
+                }
                 }
 
             }

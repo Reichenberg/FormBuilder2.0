@@ -83,6 +83,8 @@
         $('.timepicker').timepicker();
     }
 
+    //Purpose: Pass form to controller
+    //Checks for various errors and sends data using ajax
     self.SubmitForm = function () {
         if(self.FormFields().length <= 0)
         {
@@ -98,10 +100,16 @@
             $("#formName").removeClass("has-error", 0, 0, 0);
             self.nameClass("");
 
-            for (var i = 0; i < self.WorkFlowMembers().length - 1; i++) {
-                self.WorkFlow += self.WorkFlowMembers()[i].memberEmail() + ',';
+            if (self.HasWorkFlow()) {
+                for (var i = 0; i < self.WorkFlowMembers().length - 1; i++) {
+                    self.WorkFlow += self.WorkFlowMembers()[i].memberEmail() + ',';
+                }
+                self.WorkFlow += self.WorkFlowMembers()[self.WorkFlowMembers().length - 1].memberEmail();
             }
-            self.WorkFlow += self.WorkFlowMembers()[self.WorkFlowMembers().length - 1].memberEmail();
+            else
+            {
+                self.WorkFlow = "";
+            }
 
             for (var i = 0; i < self.FormFields().length; i++) {
                 self.Form.appendChild(self.FormFields()[i].CreateElement());
@@ -119,10 +127,14 @@
                     workFlow: self.WorkFlow
                 },
                 success: function (data) {
-                    bootbox.alert(data.Message);
+                    bootbox.alert(
+                        message = data.Message
+                    );
                 },
                 error: function (data) {
-                    bootbox.alert(data.Message);
+                    bootbox.alert(
+                        message = data.Message
+                    );
                 }
             });
             self.Form = document.createElement('div');
