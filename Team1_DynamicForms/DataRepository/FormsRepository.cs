@@ -677,74 +677,155 @@ namespace Team1_DynamicForms.DataRepository
             SubmissionPart filledForm = db.SubmissionParts.Find(aW.SubmissionWholeId);
             string htmlData = filledForm.HtmlCode;
 
+            //int currentIndex = htmlData.IndexOf("<");
+
+
+            //while (currentIndex < htmlData.Length)
+            //{
+            //    if (htmlData.Substring(currentIndex, "<h3>".Length) == "<h3>")
+            //    {
+            //        currentIndex = currentIndex + "<h3>".Length;
+            //        formdata.Add("Header Label: ");
+            //        formdata.Add(htmlData.Substring(currentIndex, htmlData.IndexOf("</h3>", currentIndex) - currentIndex));
+            //        currentIndex += htmlData.IndexOf("</h3>") + "</h3>".Length;
+            //    }
+
+
+            //    else if (htmlData.Substring(currentIndex, "<label class=\"form-label\">".Length) == "<label class=\"form-label\">")
+            //    {
+            //        currentIndex = currentIndex + "<label class=\"form-label\">".Length;
+            //        formdata.Add("Label: ");
+            //        formdata.Add(htmlData.Substring(currentIndex, htmlData.IndexOf("</label>", currentIndex) - currentIndex));
+            //        currentIndex += htmlData.IndexOf("</label>") + "</label>".Length;
+            //    }
+
+
+            //    else if (htmlData.Substring(currentIndex, "<input class=\"form-control\" type=\"text\" value=\"".Length) == "<input class=\"form-control\" type=\"text\" value=\"")
+            //    {
+            //        currentIndex = currentIndex + "<input class=\"form-control\" type=\"text\" value=\"".Length;
+            //        formdata.Add("Test Field Label: ");
+            //        formdata.Add(htmlData.Substring(currentIndex, htmlData.IndexOf("\" name=", currentIndex) - currentIndex));
+            //        currentIndex += htmlData.IndexOf("\" name") + "\" name".Length;
+            //    }
+
+
+            //    else if (htmlData.Substring(currentIndex, "<input type=\"checkbox\" value=\"".Length) == "<input type=\"checkbox\" value=\"")
+            //    {
+            //        currentIndex = currentIndex + "<input type=\"checkbox\" value=\"".Length;
+            //        formdata.Add("Label: ");
+            //        formdata.Add(htmlData.Substring(htmlData.IndexOf(">", currentIndex) + 1, htmlData.IndexOf("</label>", currentIndex + 1) - currentIndex + 1));
+            //        if (htmlData.IndexOf("checked", currentIndex) < htmlData.IndexOf(">", currentIndex) && (htmlData.IndexOf("checked", currentIndex) > 0))
+            //        {
+            //            formdata.Add(htmlData.Substring(currentIndex, htmlData.IndexOf("\" checked", currentIndex) - currentIndex));
+            //            currentIndex += htmlData.IndexOf("\" checked") + "\" checked".Length;
+            //        }
+            //    }
+
+
+            //    currentIndex += 1;
+            //}
+
             int currentIndex = 0;
-
-            while (currentIndex < htmlData.Length)
+            int nextElement = 0;
+            while (currentIndex < htmlData.Length )
             {
-                var  formelements = new List<KeyValuePair<string,int>>();
-                formelements.Add(new KeyValuePair<string, int>("<h3>", htmlData.IndexOf("<h3>", currentIndex)));
-                formelements.Add(new KeyValuePair<string, int>("<label", htmlData.IndexOf("<label", currentIndex)));
-                formelements.Add(new KeyValuePair<string, int>("type=\"text\"", htmlData.IndexOf("type=\"text\"", currentIndex)));
-                formelements.Add(new KeyValuePair<string, int>("type=\"checkbox\"", htmlData.IndexOf("type=\"checkbox\"", currentIndex)));
-                formelements.Add(new KeyValuePair<string, int>("<select", htmlData.IndexOf("<select", currentIndex)));
-                formelements.Add(new KeyValuePair<string, int>("type=\"radio\"", htmlData.IndexOf("type=\"radio\"", currentIndex)));
-                formelements.Add(new KeyValuePair<string, int>("type=\"datepicker\"", htmlData.IndexOf("type=\"datepicker\"", currentIndex)));
-                formelements.Add(new KeyValuePair<string, int>("type=\"timepicker\"", htmlData.IndexOf("type=\"timepicker\"", currentIndex)));
+                nextElement = htmlData.IndexOf("type=\"text\"",currentIndex) + "type=\"text\"".Length;
 
-                int lowest = -1;
-
-                KeyValuePair<string, int> currentElement = new KeyValuePair<string, int>();
-
-                foreach(var element in formelements)
+                if (nextElement > currentIndex)
                 {
-                    if ((element.Value < lowest || lowest == -1) && element.Value > -1)
-                    {
-                        lowest = element.Value;
-                        currentElement = element;
-                    }
+                    htmlData = htmlData.Insert(nextElement, " readonly");
+                    currentIndex = nextElement + 1;
                 }
-                //once lowest index is found
-
-                currentIndex = htmlData.IndexOf(currentElement.Key) + currentElement.Key.Length;
-
-                if(currentElement.Key == "<h3>")
+                else
                 {
-                    string title = htmlData.Substring(currentIndex, htmlData.IndexOf("</h3>", currentIndex) - currentIndex);
-                    formdata.Add("Header Label: ");
-                    formdata.Add(title);
-                }
-                else if(currentElement.Key == "<label")
-                {
-
-                }
-                else if (currentElement.Key == "type=\"text\"")
-                {
-
-                }
-                else if (currentElement.Key == "type=\"checkbox\"")
-                {
-
-                }
-                else if (currentElement.Key == "<select")
-                {
-
-                }
-                else if (currentElement.Key == "type=\"radio\"")
-                {
-
-                }
-                else if (currentElement.Key == "type=\"datepicker\"")
-                {
-
-                }
-                else if (currentElement.Key == "type=\"timepicker\"")
-                {
-
+                    break;
                 }
             }
 
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("type=\"timepicker\"", currentIndex) + "type=\"timepicker\"".Length;
 
+                if (nextElement > currentIndex)
+                {
+                    htmlData = htmlData.Insert(nextElement, " disabled");
+                    currentIndex = nextElement + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
 
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("type=\"datepicker\"", currentIndex) + "type=\"datepicker\"".Length;
+
+                if (nextElement > currentIndex)
+                {
+                    htmlData = htmlData.Insert(nextElement, " disabled");
+                    currentIndex = nextElement + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("<select class=\"form-control\"", currentIndex) + "<select class=\"form-control\"".Length;
+
+                if (nextElement > currentIndex)
+                {
+                    htmlData = htmlData.Insert(nextElement, " disabled");
+                    currentIndex = nextElement + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("type=\"checkbox\"", currentIndex) + "type=\"checkbox\"".Length;
+
+                if (nextElement > currentIndex)
+                {
+                    htmlData = htmlData.Insert(nextElement, " disabled readonly");
+                    currentIndex = nextElement + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("type=\"radio\"", currentIndex) + "type=\"radio\"".Length;
+
+                if (nextElement > currentIndex)
+                {
+                    htmlData = htmlData.Insert(nextElement, " disabled readonly");
+                    currentIndex = nextElement + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
 
             return formdata;
         }
