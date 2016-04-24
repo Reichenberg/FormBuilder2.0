@@ -36,6 +36,7 @@
     <script type="text/javascript">
         $(function () {
             $('#addItemMembers').on('click', function () {
+                alert("Adding new member");
                 $.ajax({
                     url: '@Url.Action("addNewMember")',
                     cache: false,
@@ -46,7 +47,8 @@
                 });
                 return false;
             });
-            $('#editorRowsMembers').on('click', '.button-main', function () {
+            $('#editorRowsMembers').on('click', '.btn.btn-danger', function () {
+                alert("removing a member");
                 $(this).closest('.editorRow').remove();
             });
         });
