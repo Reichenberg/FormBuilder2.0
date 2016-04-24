@@ -31,10 +31,10 @@ namespace Team1_DynamicForms.Controllers
         /// </summary>
         /// <param name="formName">Name of the form to add</param>
         /// <param name="formHtml">Form Html</param>
-        /// <param name="workflow">Specified workflow to be attached to the form</param>
+        /// <param name="workFlow">Specified workflow to be attached to the form</param>
         /// <returns>Json response indicating failure or success</returns>
         [HttpPost]
-        public ActionResult AddForm(string formName, string formHtml, int workflow)
+        public ActionResult AddForm(string formName, string formHtml, string workFlow)
         {
 
             try
@@ -42,6 +42,7 @@ namespace Team1_DynamicForms.Controllers
 
                 formHtml = HttpUtility.UrlDecode(formHtml);
                 var fail = new { Success = "False", Message = "Form Cannot Be Empty." };
+                var workFlowFail = new { Success = "False", Message = "Workflow Emails Not Accounts" };
                 var success = new { Success = "True", Message = "Form Successfully Added" };
                 if (String.IsNullOrWhiteSpace(formHtml))
                 {
@@ -49,15 +50,23 @@ namespace Team1_DynamicForms.Controllers
                     return Json(fail);
                 }
 
+                int workFlowID = db.CreateAndAddWorkFlow(workFlow.Split(',').ToList());
+                if (workFlowID < 0)
+                {
+                    return Json(workFlowFail);
+                }
+                else
+                {
                 string creatorAccount = User.Identity.GetUserName();
 
-                if (db.AddFormToDb(formName, formHtml, workflow, creatorAccount))
+                    if (db.AddFormToDb(formName, formHtml, workFlowID, creatorAccount))
                 {
                     return Json(success);
                 }
                 else
                 {
                     return Json(fail);
+                }
                 }
 
             }

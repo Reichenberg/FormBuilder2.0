@@ -5,6 +5,11 @@
     self.FormName = ko.observable();
     self.nameClass = ko.observable("");
 
+    //Workflow data
+    self.WorkFlowMembers = ko.observableArray();
+    self.WorkFlow = "";
+    self.HasWorkFlow = ko.observable(false);
+
     self.toggleFieldOptions = ko.observable(true);
     self.optionVal = ko.observable();
 
@@ -94,6 +99,26 @@
         else {
             $("#formName").removeClass("has-error", 0, 0, 0);
             self.nameClass("");
+
+            if (self.HasWorkFlow()) {
+                if(self.WorkFlowMembers().length > 0)
+                {
+                    for(var i = 0; i < self.WorkFlowMembers().length - 1; i++) {
+                        self.WorkFlow += self.WorkFlowMembers()[i].memberEmail() + ',';
+                    }
+                    self.WorkFlow += self.WorkFlowMembers()[self.WorkFlowMembers().length - 1].memberEmail();
+                }
+                else
+                {
+                    bootbox.alert("Workflow is empty");
+                    return;
+                }
+            }
+            else
+            {
+                self.WorkFlow = "";
+            }
+
             for (var i = 0; i < self.FormFields().length; i++) {
                 self.Form.appendChild(self.FormFields()[i].CreateElement());
                 if (self.FormFields()[i].Type() === "header") {
@@ -107,17 +132,32 @@
                 data: {
                     formName: self.FormName(),
                     formHtml: window.escape(self.Form), //encodes the html for controller to decode(secure)
-                    workflow: 0
+                    workFlow: self.WorkFlow
                 },
                 success: function (data) {
-                    bootbox.alert(data.Message);
+                    bootbox.alert(
+                        message = data.Message
+                    );
                 },
                 error: function (data) {
-                    bootbox.alert(data.Message);
+                    bootbox.alert(
+                        message = data.Message
+                    );
                 }
             });
             self.Form = document.createElement('div');
             self.Form.setAttribute("id", "Form");
         }
     }
+
+    //Workflow functions
+    //Event to add new member
+    self.addMember = function () {
+        self.WorkFlowMembers.push(new WorkFlowMember(""));
+    }
+    //Event to remove member
+    self.removeMember = function (member) {
+        self.WorkFlowMembers.remove(member);
+    }
+
 }
