@@ -24,6 +24,35 @@
             <div class="checkbox">
                 <label for="optionToggle"><input type="checkbox" data-bind="checked: toggleFieldOptions" />Toggle Options View</label>
             </div>
+
+          
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" data-bind="checked: HasWorkFlow" />Attach workflow?
+                    </label>
+                </div>
+                <div data-bind="visible: HasWorkFlow">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="padding-bottom">Member Email</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: WorkFlowMembers">
+                            <tr>
+                                <td>
+                                    <input class="form-control" data-bind="value: memberEmail" />
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger" href="#" data-bind="click: $root.removeMember">Remove</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a class="button-small" href="#" data-bind="click: addMember" ><span class="glyphicon glyphicon-plus"></span> Add Workflow Member</a>
+                </div>
+
         </div>
         <div class="col-md-8 col-xs-12">
             <div class="input-group" id="formName">
@@ -132,38 +161,13 @@
             </div>
         
         </div>
-        
-        <div class="row">
-            <label for="workflowToggle">
-                <input type="checkbox" data-bind="checked: HasWorkFlow" />Attach workflow?
-            </label>
-            <div data-bind="visible: HasWorkFlow">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Member Email</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: WorkFlowMembers">
-                        <tr>
-                            <td>
-                                <input data-bind="value: memberEmail" />
-                            </td>
-                            <td>
-                                <a href="#" data-bind="click: $root.removeMember">Remove</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button data-bind="click: addMember">Add another member to workflow</button>
-            </div>
-        </div>
+       
 
         <div class="row">
             <div class="col-md-3 col-xs-12 formOptions">
                 </div>
-                <a class="button-main createButton" href="#" data-bind="click: SubmitForm"><span class="glyphicon glyphicon-plus"></span> Create Form</a>
+                <a class="button-main" href="#" data-bind="click: SubmitForm"><span class="glyphicon glyphicon-plus"></span> Create Form</a>
+            <a class="btn btn-danger" href="/admin/index">Cancel</a>
         </div>
 
 

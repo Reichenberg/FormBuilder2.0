@@ -120,23 +120,36 @@ a:focus{
 
 /*------Universal Styles------*/
 
-.button-main{
+.button-main, .button-main:focus{
     padding: 13px;
     
-    background: rgb(0,50,105);
+    background: rgba(0,50,105,.75);
     border-radius: 10px;
     overflow: auto;
     color: white;
     font-size: 16px;
 }
 
-.button-main:hover span{
+.button-small, .button-small:focus{
+    padding: 8px;
+    background: rgba(0,50,105,.75);
+    border-radius: 10px;
+    overflow: auto;
+    color: white;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+
+
+.button-main:hover span, .button-small:hover span{
     color: #f5cf47;
 }
 
-.button-main:hover{
+.button-main:hover, .button-small:hover{
     color: white;
     text-decoration: none;
+    background: rgba(0,50,105,1);
 }
 
 .row{
@@ -199,6 +212,10 @@ transition: padding cubic-bezier(.93,0,.09,1) .3s, linear .2s
     background-color: rgba(0,50,105, .75) !important;
     color: white !important;
     font-size: 22px;
+}
+
+.padding-bottom{
+    padding-bottom: 10px;
 }
 
 

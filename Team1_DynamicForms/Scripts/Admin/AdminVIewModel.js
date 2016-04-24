@@ -147,6 +147,7 @@
             });
             self.Form = document.createElement('div');
             self.Form.setAttribute("id", "Form");
+            self.WorkFlow = "";
         }
     }
 
