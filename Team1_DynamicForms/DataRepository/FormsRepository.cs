@@ -322,6 +322,33 @@ namespace Team1_DynamicForms.DataRepository
 
             db.SaveChanges();
 
+            if (finished.ToLower() == "yes")
+            {
+                FormSubmission formSubmission = db.FormSubmissions.Find(updatedSubmissionWhole.FormSubmissionId);
+                WholeForm form = db.WholeForms.Find(formSubmission.WholeFormId);
+                if (form.WorkFlowId > -1)
+                {
+                    var accWorkflows = db.AccountWorkflows.Where(aw => aw.WorkFlowId == form.WorkFlowId && (!(aw.SubmissionWholeId.HasValue))).ToList();
+
+                    foreach (var adminWF in accWorkflows)
+                    {
+                        AccountWorkflow newAW = new AccountWorkflow();
+                        int accountWorkFlowId = db.AccountWorkflows.Max(acwf => acwf.Id);
+                        accountWorkFlowId = accountWorkFlowId < 0 ? 1 : accountWorkFlowId + 1;
+
+                        newAW.Id = accountWorkFlowId;
+                        newAW.Order = adminWF.Order;
+                        newAW.Notified = adminWF.Notified;
+                        newAW.AccountId = adminWF.AccountId;
+                        newAW.WorkFlowId = adminWF.WorkFlowId;
+                        newAW.SubmissionWholeId = updatedSubmissionWhole.Id;
+
+                        db.AccountWorkflows.Add(newAW);
+                        db.SaveChanges();
+                    }
+                }
+            }
+
             return true;
         }
 
