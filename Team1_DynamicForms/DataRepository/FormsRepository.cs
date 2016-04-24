@@ -414,19 +414,11 @@ namespace Team1_DynamicForms.DataRepository
         /// <summary>
         /// Adds users to an existing workflow
         /// </summary>
-        /// <param name="userEmails">the emails of the users</param>
+        /// <param name="users">User ids</param>
         /// <param name="workFlowId">the id of the workflow to add users to</param>
         /// <returns></returns>
-        internal bool AddUsersToWorkFlow(List<string> userEmails, int workFlowId)
+        internal bool AddUsersToWorkFlow(List<int> users, int workFlowId)
         {
-            List<int> users = GetUsersByEmail(userEmails);
-
-            //If not all emails have accounts attached, invalid emails where passed in.
-            if(users.Count != userEmails.Count)
-            {
-                return false;
-            }
-
             for (int i = 0; i < users.Count; i++)
             {
                 AccountWorkflow newAccountWorkFlow = new AccountWorkflow();

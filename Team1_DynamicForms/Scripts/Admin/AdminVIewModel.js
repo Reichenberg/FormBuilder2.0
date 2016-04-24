@@ -101,10 +101,18 @@
             self.nameClass("");
 
             if (self.HasWorkFlow()) {
-                for (var i = 0; i < self.WorkFlowMembers().length - 1; i++) {
-                    self.WorkFlow += self.WorkFlowMembers()[i].memberEmail() + ',';
+                if(self.WorkFlowMembers().length > 0)
+                {
+                    for(var i = 0; i < self.WorkFlowMembers().length - 1; i++) {
+                        self.WorkFlow += self.WorkFlowMembers()[i].memberEmail() + ',';
+                    }
+                    self.WorkFlow += self.WorkFlowMembers()[self.WorkFlowMembers().length - 1].memberEmail();
                 }
-                self.WorkFlow += self.WorkFlowMembers()[self.WorkFlowMembers().length - 1].memberEmail();
+                else
+                {
+                    bootbox.alert("Workflow is empty");
+                    return;
+                }
             }
             else
             {
@@ -123,7 +131,7 @@
                 url: "/Admin/AddForm",
                 data: {
                     formName: self.FormName(),
-                    formHtml: self.Form,
+                    formHtml: window.escape(self.Form), //encodes the html for controller to decode(secure)
                     workFlow: self.WorkFlow
                 },
                 success: function (data) {

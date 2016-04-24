@@ -26,11 +26,6 @@ namespace Team1_DynamicForms.Controllers
             return View();
         }
 
-        public ActionResult CreateFormWorkFlow()
-        {
-            return View();
-        }
-
         /// <summary>
         /// Adds a new form to the database
         /// </summary>
@@ -47,6 +42,7 @@ namespace Team1_DynamicForms.Controllers
 
                 formHtml = HttpUtility.UrlDecode(formHtml);
                 var fail = new { Success = "False", Message = "Form Cannot Be Empty." };
+                var workFlowFail = new { Success = "False", Message = "Workflow Emails Not Accounts" };
                 var success = new { Success = "True", Message = "Form Successfully Added" };
                 if (String.IsNullOrWhiteSpace(formHtml))
                 {
@@ -57,7 +53,7 @@ namespace Team1_DynamicForms.Controllers
                 int workFlowID = db.CreateAndAddWorkFlow(workFlow.Split(',').ToList());
                 if (workFlowID < 0)
                 {
-                    return Json(fail);
+                    return Json(workFlowFail);
                 }
                 else
                 {
