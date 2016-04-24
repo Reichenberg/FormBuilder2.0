@@ -5,14 +5,11 @@
 
 <h2>Review Form</h2>
 
-@foreach (string data in Model.formData)
-{
-    <p>data</p><br>
-}
+@Html.Raw( @Model.formData)
 <br>
 <div class="row">
     <div class="col-xs-12">
-        <form method="post" action="/admin/submitResult/@Model.accountWf.Id">
+        <form method="post" action="/admin/submitResult/@Model.accountWf">
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input name="Submit" type="submit" value="Approve" class="btn btn-primary" />

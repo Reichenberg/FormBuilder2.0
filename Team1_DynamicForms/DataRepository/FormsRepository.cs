@@ -269,9 +269,9 @@ namespace Team1_DynamicForms.DataRepository
                 WholeForm form = db.WholeForms.Find(fp.WholeFormId);
                 if(form.WorkFlowId > -1)
                 {
-                    var accWorkflows = db.AccountWorkflows.Where(aw => aw.WorkFlowId == form.WorkFlowId && aw.AccountId < 0);
+                    var accWorkflows = db.AccountWorkflows.Where(aw => aw.WorkFlowId == form.WorkFlowId && (!(aw.SubmissionWholeId.HasValue))).ToList();
 
-                    foreach(AccountWorkflow adminWF in accWorkflows)
+                    foreach(var adminWF in accWorkflows)
                     {
                         AccountWorkflow newAW = new AccountWorkflow();
                         int accountWorkFlowId = db.AccountWorkflows.Max(acwf => acwf.Id);
@@ -670,71 +670,25 @@ namespace Team1_DynamicForms.DataRepository
 
 
 
-        public List<string> GetFilledFormData(int accWorkflowId)
+        public string GetFilledFormData(int accWorkflowId)
         {
-            List<string> formdata = new List<string>();
             AccountWorkflow aW = db.AccountWorkflows.Find(accWorkflowId);
             SubmissionPart filledForm = db.SubmissionParts.Find(aW.SubmissionWholeId);
             string htmlData = filledForm.HtmlCode;
-
-            //int currentIndex = htmlData.IndexOf("<");
-
-
-            //while (currentIndex < htmlData.Length)
-            //{
-            //    if (htmlData.Substring(currentIndex, "<h3>".Length) == "<h3>")
-            //    {
-            //        currentIndex = currentIndex + "<h3>".Length;
-            //        formdata.Add("Header Label: ");
-            //        formdata.Add(htmlData.Substring(currentIndex, htmlData.IndexOf("</h3>", currentIndex) - currentIndex));
-            //        currentIndex += htmlData.IndexOf("</h3>") + "</h3>".Length;
-            //    }
-
-
-            //    else if (htmlData.Substring(currentIndex, "<label class=\"form-label\">".Length) == "<label class=\"form-label\">")
-            //    {
-            //        currentIndex = currentIndex + "<label class=\"form-label\">".Length;
-            //        formdata.Add("Label: ");
-            //        formdata.Add(htmlData.Substring(currentIndex, htmlData.IndexOf("</label>", currentIndex) - currentIndex));
-            //        currentIndex += htmlData.IndexOf("</label>") + "</label>".Length;
-            //    }
-
-
-            //    else if (htmlData.Substring(currentIndex, "<input class=\"form-control\" type=\"text\" value=\"".Length) == "<input class=\"form-control\" type=\"text\" value=\"")
-            //    {
-            //        currentIndex = currentIndex + "<input class=\"form-control\" type=\"text\" value=\"".Length;
-            //        formdata.Add("Test Field Label: ");
-            //        formdata.Add(htmlData.Substring(currentIndex, htmlData.IndexOf("\" name=", currentIndex) - currentIndex));
-            //        currentIndex += htmlData.IndexOf("\" name") + "\" name".Length;
-            //    }
-
-
-            //    else if (htmlData.Substring(currentIndex, "<input type=\"checkbox\" value=\"".Length) == "<input type=\"checkbox\" value=\"")
-            //    {
-            //        currentIndex = currentIndex + "<input type=\"checkbox\" value=\"".Length;
-            //        formdata.Add("Label: ");
-            //        formdata.Add(htmlData.Substring(htmlData.IndexOf(">", currentIndex) + 1, htmlData.IndexOf("</label>", currentIndex + 1) - currentIndex + 1));
-            //        if (htmlData.IndexOf("checked", currentIndex) < htmlData.IndexOf(">", currentIndex) && (htmlData.IndexOf("checked", currentIndex) > 0))
-            //        {
-            //            formdata.Add(htmlData.Substring(currentIndex, htmlData.IndexOf("\" checked", currentIndex) - currentIndex));
-            //            currentIndex += htmlData.IndexOf("\" checked") + "\" checked".Length;
-            //        }
-            //    }
-
-
-            //    currentIndex += 1;
-            //}
-
+            string test = "";
             int currentIndex = 0;
             int nextElement = 0;
             while (currentIndex < htmlData.Length )
             {
-                nextElement = htmlData.IndexOf("type=\"text\"",currentIndex) + "type=\"text\"".Length;
-
-                if (nextElement > currentIndex)
+                nextElement = htmlData.IndexOf("type=\"text\"",currentIndex);
+                if (nextElement >= 0)
                 {
-                    htmlData = htmlData.Insert(nextElement, " readonly");
-                    currentIndex = nextElement + 1;
+                    test = htmlData.Substring(nextElement, "type=\"text\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("type=\"text\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"text\"".Length, " readonly");
+                    currentIndex = nextElement + "type=\"text\"".Length + 1;
                 }
                 else
                 {
@@ -746,12 +700,16 @@ namespace Team1_DynamicForms.DataRepository
             nextElement = 0;
             while (currentIndex < htmlData.Length)
             {
-                nextElement = htmlData.IndexOf("type=\"timepicker\"", currentIndex) + "type=\"timepicker\"".Length;
-
-                if (nextElement > currentIndex)
+                nextElement = htmlData.IndexOf("type=\"timepicker\"", currentIndex, "type=\"timepicker\"".Length) + "type=\"timepicker\"".Length;
+                if (nextElement >= 0)
                 {
-                    htmlData = htmlData.Insert(nextElement, " disabled");
-                    currentIndex = nextElement + 1;
+                    test = htmlData.Substring(nextElement, "type=\"timepicker\"".Length); 
+                }
+
+                if (nextElement > currentIndex && test.Equals("type=\"timepicker\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"timepicker\"".Length, " disabled");
+                    currentIndex = nextElement + "type=\"timepicker\"".Length + 1;
                 }
                 else
                 {
@@ -764,11 +722,14 @@ namespace Team1_DynamicForms.DataRepository
             while (currentIndex < htmlData.Length)
             {
                 nextElement = htmlData.IndexOf("type=\"datepicker\"", currentIndex) + "type=\"datepicker\"".Length;
-
-                if (nextElement > currentIndex)
+                if (nextElement >=0)
                 {
-                    htmlData = htmlData.Insert(nextElement, " disabled");
-                    currentIndex = nextElement + 1;
+                    test = htmlData.Substring(nextElement, "type=\"datepicker\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("type=\"datepicker\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"datepicker\"".Length, " disabled");
+                    currentIndex = nextElement + "type=\"datepicker\"".Length + 1;
                 }
                 else
                 {
@@ -781,11 +742,14 @@ namespace Team1_DynamicForms.DataRepository
             while (currentIndex < htmlData.Length)
             {
                 nextElement = htmlData.IndexOf("<select class=\"form-control\"", currentIndex) + "<select class=\"form-control\"".Length;
-
-                if (nextElement > currentIndex)
+                if (nextElement >= 0)
                 {
-                    htmlData = htmlData.Insert(nextElement, " disabled");
-                    currentIndex = nextElement + 1;
+                    test = htmlData.Substring(nextElement, "<select class=\"form-control\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("<select class=\"form-control\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "<select class=\"form-control\"".Length, " disabled");
+                    currentIndex = nextElement + "<select class=\"form-control\"".Length + 1;
                 }
                 else
                 {
@@ -798,11 +762,14 @@ namespace Team1_DynamicForms.DataRepository
             while (currentIndex < htmlData.Length)
             {
                 nextElement = htmlData.IndexOf("type=\"checkbox\"", currentIndex) + "type=\"checkbox\"".Length;
-
-                if (nextElement > currentIndex)
+                if (nextElement >=0)
                 {
-                    htmlData = htmlData.Insert(nextElement, " disabled readonly");
-                    currentIndex = nextElement + 1;
+                    test = htmlData.Substring(nextElement, "type=\"checkbox\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("type=\"checkbox\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"checkbox\"".Length, " disabled readonly");
+                    currentIndex = nextElement + "type=\"checkbox\"".Length + 1;
                 }
                 else
                 {
@@ -815,11 +782,14 @@ namespace Team1_DynamicForms.DataRepository
             while (currentIndex < htmlData.Length)
             {
                 nextElement = htmlData.IndexOf("type=\"radio\"", currentIndex) + "type=\"radio\"".Length;
-
-                if (nextElement > currentIndex)
+                if (nextElement >=0)
                 {
-                    htmlData = htmlData.Insert(nextElement, " disabled readonly");
-                    currentIndex = nextElement + 1;
+                    test = htmlData.Substring(nextElement, "type=\"radio\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("type=\"radio\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"radio\"".Length, " disabled readonly");
+                    currentIndex = nextElement + "type=\"radio\"".Length + 1;
                 }
                 else
                 {
@@ -827,7 +797,7 @@ namespace Team1_DynamicForms.DataRepository
                 }
             }
 
-            return formdata;
+            return htmlData;
         }
 
 

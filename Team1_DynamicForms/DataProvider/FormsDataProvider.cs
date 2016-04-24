@@ -433,7 +433,7 @@ namespace Team1_DynamicForms.DataProvider
         }
 
 
-        public List<string> GetFormDataToApproveOrDeny(int accWorkflowId)
+        public string GetFormDataToApproveOrDeny(int accWorkflowId)
         {
             return db.GetFilledFormData(accWorkflowId);
         }

@@ -8,7 +8,7 @@ namespace Team1_DynamicForms.Models
 {
     public class ApproveOrDenyViewModel
     {
-        public List<string> formData { get; set; }
-        public AccountWorkflow accountWf { get; set; }
+        public string formData { get; set; }
+        public int accountWf { get; set; }
     }
 }

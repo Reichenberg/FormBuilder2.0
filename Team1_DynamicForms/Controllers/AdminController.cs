@@ -89,7 +89,7 @@ namespace Team1_DynamicForms.Controllers
         {
             ApproveOrDenyViewModel ApproveOrDeny = new ApproveOrDenyViewModel();
             ApproveOrDeny.formData = db.GetFormDataToApproveOrDeny((int)id);
-            ApproveOrDeny.accountWf = db.GetAccForkflow((int)id);
+            ApproveOrDeny.accountWf = (int)id;
 
             return View(ApproveOrDeny);
         }
