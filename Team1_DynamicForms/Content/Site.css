@@ -209,7 +209,7 @@ transition: padding cubic-bezier(.93,0,.09,1) .3s, linear .2s
 }
 
 .panel-heading{
-    background-color: rgba(0,50,105, .75) !important;
+    background-color: rgba(0,50,105, .85) !important;
     color: white !important;
     font-size: 22px;
 }

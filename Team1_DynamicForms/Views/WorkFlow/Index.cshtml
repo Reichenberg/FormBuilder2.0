@@ -4,25 +4,33 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Workflow Membership</h2>
+<hr/>
 
-Forms Attached By Workflow to current user
-<table class="table">
-    @foreach(var item in Model.Workflows)
-    {
-        <tr>
-        @foreach(string name in item.FormNames)
-        {
-                <td>
-                    @name
-                </td>
-        }
-        </tr>
-    }    
-</table>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">Forms Attached to</div>
+            <div class="panel-body">
 
-<div class="row">
-    <div class="col-md-3">
-        <a class="button-main" href="/WorkFlow/CreateIndex"><span class="glyphicon glyphicon-plus"></span> New WorkFlow</a>
+                <table class="table">
+                    @foreach (var item in Model.Workflows)
+                    {
+                        <tr>
+                            @foreach (string name in item.FormNames)
+                            {
+                                <td>
+                                    @name
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <a class="button-main" href="/WorkFlow/CreateIndex"><span class="glyphicon glyphicon-plus"></span> New WorkFlow</a>
+        </div>
+    </div>
