@@ -40,6 +40,7 @@ namespace Team1_DynamicForms
             bundles.Add(new ScriptBundle("~/Admin/scripts").Include(
                       "~/Scripts/Admin/index.js",
                       "~/Scripts/Admin/FormField.js",
+                      "~/Scripts/Admin/WorkFlowMember.js",
                       "~/Scripts/Admin/AdminViewModel.js"));
         }
     }

@@ -331,7 +331,17 @@ namespace Team1_DynamicForms.DataProvider
 
             //Creates workflow with empty type, TODO implement workflow types
             int workFlow;
-            try {
+
+            //Get user ids, before doing anything else, prevents junk workflows from being made
+            List<int> users = db.GetUsersByEmail(userEmails);
+            
+            //Check that all emails have associated accounts.
+            if (users.Count != userEmails.Count)
+            {
+                return -1;
+            }
+            try
+            {
                 workFlow = db.CreateAndInsertWorkFlow("Standard");
             }
             catch (Exception e)
@@ -340,8 +350,9 @@ namespace Team1_DynamicForms.DataProvider
             }
 
             //Add users and create AccountWorkflow table entries.
-            try {
-                if (db.AddUsersToWorkFlow(userEmails, workFlow))
+            try
+            {
+                if (db.AddUsersToWorkFlow(users, workFlow))
                 {
                     return workFlow;
                 }
@@ -354,7 +365,6 @@ namespace Team1_DynamicForms.DataProvider
             {
                 throw (new Exception("Error adding user to workflow"));
             }
-            return -1;
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNet.Identity
-@model Team1_DynamicForms.Models.WorkflowsToApproveViewModel
 @{
     ViewBag.Title = "Admin";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,44 +8,40 @@
 <hr />
 
     <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">Actions</div>
+            <div class="panel-body">
+                <div class="col-md-3 col-xs-12">
+                    <h3>
+                        Create
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </h3>
+                    <hr />
+                    <ul class="sectionOptions">
+                        <a href="/Admin/CreateForm">
+                            <li>
+                                Form
+                            </li>
+                        </a>
+                        <a href="/Admin/CreateForm">
+                            <li>
+                                Workflow
+                            </li>
+                        </a>
+                    </ul>
+                </div>
 
-        <div class="col-md-3 col-xs-12">
-            <h3>
-                Admin Actions
-            </h3>
-            <hr/>
-            <ul class="sectionOptions">
-                <a href="/Admin/CreateForm">
-                    <li>
-                        New Form
-                    </li>
-                </a>  
-                <a href="/Admin/CreateForm">
-                    <li>
-                        New Workflow
-                    </li>
-                </a>        
-            </ul>
+                <div class="col-md-1"></div>
+
+                <div class="col-md-3 col-xs-12">
+                    <h3>
+                        Pending Approval
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </h3>
+                    <hr />
+                    <ul class="sectionOptions"></ul>
+                </div>
+            </div>
         </div>
-
-        <div class="col-md-1"></div>
-
-        <div class="col-md-3 col-xs-12">
-            <h3>
-                Pending Approval
-            </h3>
-            <hr />
-            <ul class="sectionOptions">
-                @for (int i = 0; i < Model.formsToApprove.Count; i++)
-                {
-                    <a href="/admin/approve/@Model.formsToApprove[i].Id">
-                        <li>
-                            @Model.nameOfFilledForm[0] submitted by user @Model.usersWhoFilledForm[0]
-                        </li>
-                    </a>
-                }
-            </ul>
-        </div>
-
     </div>
 

@@ -365,6 +365,7 @@
     <Content Include="Scripts\Admin\AdminVIewModel.js" />
     <Content Include="Scripts\Admin\FormField.js" />
     <Content Include="Scripts\Admin\index.js" />
+    <Content Include="Scripts\Admin\WorkFlowMember.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="ApplicationInsights.config">
