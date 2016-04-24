@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Team1_DynamicForms.DataProvider;
+using Team1_DynamicForms.Models;
 
 namespace Team1_DynamicForms.Controllers
 {
@@ -17,7 +18,13 @@ namespace Team1_DynamicForms.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            return View();
+            WorkflowsToApproveViewModel WFViewModel = new WorkflowsToApproveViewModel();
+
+            WFViewModel.formsToApprove = db.GetSubmittedFormsForAdminReview();
+            WFViewModel.usersWhoFilledForm = db.GetUsernamesOfSubmittedFormsForAdminReview(WFViewModel.formsToApprove);
+            WFViewModel.nameOfFilledForm = db.GetNamesOfSubmittedFormsForAdminReview(WFViewModel.formsToApprove);
+
+            return View(WFViewModel);
         }
 
         public ActionResult CreateForm()

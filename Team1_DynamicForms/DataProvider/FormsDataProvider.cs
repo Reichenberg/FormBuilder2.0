@@ -387,6 +387,40 @@ namespace Team1_DynamicForms.DataProvider
         {
             return db.GetFormName(formId);
         }
+
+
+
+
+
+
+
+        public List<AccountWorkflow> GetSubmittedFormsForAdminReview()
+        {
+            Account admin = GetCurrentAccount();
+            return db.GetSubmittedFormsForApproval(admin);
+        }
+
+        public List<string> GetUsernamesOfSubmittedFormsForAdminReview(List<AccountWorkflow> workflows)
+        {
+            List<string> usernames = new List<string>();
+
+            foreach(AccountWorkflow form in workflows)
+            {
+                usernames.Add(db.GetUserWhoFilledFormFromAccountWorkflow(form.Id));
+            }
+            return usernames;
+        }
+
+        public List<string> GetNamesOfSubmittedFormsForAdminReview(List<AccountWorkflow> workflows)
+        {
+            List<string> formNames = new List<string>();
+
+            foreach (AccountWorkflow form in workflows)
+            {
+                formNames.Add(db.GetNameOFFilledFormFromAccountWorkflow(form.Id));
+            }
+            return formNames;
+        }
     }
 
    

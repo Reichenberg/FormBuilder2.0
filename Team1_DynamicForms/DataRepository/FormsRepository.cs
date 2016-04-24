@@ -361,6 +361,11 @@ namespace Team1_DynamicForms.DataRepository
             return submittedFormsList;
         }
 
+
+
+
+
+
         /// <summary>
         /// Gets workflows from database based on user id
         /// TODO: add ability to grab workflows by type
@@ -511,5 +516,205 @@ namespace Team1_DynamicForms.DataRepository
             return db.WholeForms.Where(wf => wf.AccountId == user.Id).ToDictionary(wf => wf.Id, wf => wf.Name);
         }
 
+
+
+
+
+
+
+
+
+
+
+
+        public List<AccountWorkflow> GetSubmittedFormsForApproval(Account admin)
+        {
+            List<AccountWorkflow> FormsToReturn = new List<AccountWorkflow>();
+
+            //Gets account forkflows the admin must complete at some point in time.
+            var FormsToApprove =  db.AccountWorkflows.Where(aw => aw.AccountId == admin.Id && aw.Order != 0);
+
+            foreach (AccountWorkflow aW in FormsToApprove)
+            {
+                bool add = true;
+                //Gets all account workflows for each form submission to see if the admin is next in order
+                var checkForOrder = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == aW.SubmissionWholeId);
+                
+                foreach (AccountWorkflow checkOrder in checkForOrder)
+                {
+                    //If the admin is not next in line to approve the form, don't include the form to approve.
+                    if(checkOrder.Order < aW.Order && checkOrder.Order > 0)
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+
+                if(add == true)
+                {
+                    FormsToReturn.Add(aW);
+                }
+            }
+
+            return FormsToReturn;
+        }
+
+        public string GetUserWhoFilledFormFromAccountWorkflow(int id)
+        {
+            AccountWorkflow form = db.AccountWorkflows.Find(id);
+            SubmissionWhole formSubmission = db.SubmissionWholes.Find(form.SubmissionWholeId);
+            Account user = db.Accounts.Find(3);
+            return user.Name;
+        }
+
+        public string GetNameOFFilledFormFromAccountWorkflow(int id)
+        {
+            AccountWorkflow form = db.AccountWorkflows.Find(id);
+            SubmissionWhole formSubmission = db.SubmissionWholes.Find(form.SubmissionWholeId);
+            FormSubmission wholeFormSub = db.FormSubmissions.Find(6);
+            WholeForm wholeForm = db.WholeForms.Find(wholeFormSub.WholeFormId);
+            return wholeForm.Name;
+        }
+
+
+
+
+
+
+
+
+
+        public int ApproveForm(int accWorkflowId)
+        {
+            //Find the account workflow to approve
+            AccountWorkflow approvedAW = db.AccountWorkflows.Find(accWorkflowId);
+            approvedAW.Order = 0;
+            db.SaveChanges();
+
+            //Get all account workflows associated with the submitted form to see if the workflow has been completed
+            var checkForLastApproval = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == approvedAW.SubmissionWholeId);
+
+            foreach(AccountWorkflow accW in checkForLastApproval)
+            {
+                //If there is still someone remaining that must check the form, return true.
+                if(accW.Order != 0)
+                {
+                    return 1;
+                }
+            }
+
+            //If all in the workflow have approved, set the status to Approved for the form
+            SubmissionWhole completedForm = db.SubmissionWholes.Find(approvedAW.SubmissionWholeId);
+            FormSubmission approvedForm = db.FormSubmissions.Find(completedForm.FormSubmissionId);
+            approvedForm.ApprovalStatus = "Approved";
+
+            return 1;
+        }
+
+        public int DenyForm(int accWorkflowId)
+        {
+            //Find the account workflow to deny
+            AccountWorkflow deniedAW = db.AccountWorkflows.Find(accWorkflowId);
+            deniedAW.Order = 0;
+            db.SaveChanges();
+
+            //Get all account workflows associated with the submitted form to see if the workflow has been completed
+            var checkToClearRestOfWorkflow = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == deniedAW.SubmissionWholeId);
+
+            foreach (AccountWorkflow accW in checkToClearRestOfWorkflow)
+            {
+                if (accW.Order != 0)
+                {
+                    accW.Order = 0;
+                    db.SaveChanges();
+                }
+            }
+
+            //Set the entire form to Denied
+            SubmissionWhole completedForm = db.SubmissionWholes.Find(deniedAW.SubmissionWholeId);
+            FormSubmission deniedForm = db.FormSubmissions.Find(completedForm.FormSubmissionId);
+            deniedForm.ApprovalStatus = "Denied";
+
+            return 1;
+        }
+
+        public List<string> GetFilledFormData(int accWorkflowId)
+        {
+            List<string> formdata = new List<string>();
+            AccountWorkflow aW = db.AccountWorkflows.Find(accWorkflowId);
+            SubmissionPart filledForm = db.SubmissionParts.Find(aW.SubmissionWholeId);
+            string htmlData = filledForm.HtmlCode;
+
+            int currentIndex = 0;
+
+            while (currentIndex < htmlData.Length)
+            {
+                var  formelements = new List<KeyValuePair<string,int>>();
+                formelements.Add(new KeyValuePair<string, int>("<h3>", htmlData.IndexOf("<h3>", currentIndex)));
+                formelements.Add(new KeyValuePair<string, int>("<label", htmlData.IndexOf("<label", currentIndex)));
+                formelements.Add(new KeyValuePair<string, int>("type=\"text\"", htmlData.IndexOf("type=\"text\"", currentIndex)));
+                formelements.Add(new KeyValuePair<string, int>("type=\"checkbox\"", htmlData.IndexOf("type=\"checkbox\"", currentIndex)));
+                formelements.Add(new KeyValuePair<string, int>("<select", htmlData.IndexOf("<select", currentIndex)));
+                formelements.Add(new KeyValuePair<string, int>("type=\"radio\"", htmlData.IndexOf("type=\"radio\"", currentIndex)));
+                formelements.Add(new KeyValuePair<string, int>("type=\"datepicker\"", htmlData.IndexOf("type=\"datepicker\"", currentIndex)));
+                formelements.Add(new KeyValuePair<string, int>("type=\"timepicker\"", htmlData.IndexOf("type=\"timepicker\"", currentIndex)));
+
+                int lowest = -1;
+
+                KeyValuePair<string, int> currentElement = new KeyValuePair<string, int>();
+
+                foreach(var element in formelements)
+                {
+                    if ((element.Value < lowest || lowest == -1) && element.Value > -1)
+                    {
+                        lowest = element.Value;
+                        currentElement = element;
+                    }
+                }
+                //once lowest index is found
+
+                currentIndex = htmlData.IndexOf(currentElement.Key) + currentElement.Key.Length;
+
+                if(currentElement.Key == "<h3>")
+                {
+                    string title = htmlData.Substring(currentIndex, htmlData.IndexOf("</h3>", currentIndex) - currentIndex);
+                    formdata.Add("Header Label: ");
+                    formdata.Add(title);
+                }
+                else if(currentElement.Key == "<label")
+                {
+
+                }
+                else if (currentElement.Key == "type=\"text\"")
+                {
+
+                }
+                else if (currentElement.Key == "type=\"checkbox\"")
+                {
+
+                }
+                else if (currentElement.Key == "<select")
+                {
+
+                }
+                else if (currentElement.Key == "type=\"radio\"")
+                {
+
+                }
+                else if (currentElement.Key == "type=\"datepicker\"")
+                {
+
+                }
+                else if (currentElement.Key == "type=\"timepicker\"")
+                {
+
+                }
+            }
+
+
+
+
+            return formdata;
+        }
     }
 }
