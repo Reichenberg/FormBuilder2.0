@@ -5,6 +5,7 @@
 }
 
 <h2>Creating Workflow for @Model.FormName</h2>
+<hr/>
 
 <div id="MemberList">
 @using (Html.BeginForm())
@@ -19,10 +20,10 @@
             Html.RenderPartial("CreatePartial", Member);
         }
     </div>
-    @Html.ActionLink("Add", "MemberManager", null, new { id = "addItemMembers", @class = "button" });
+    @Html.ActionLink("Add", "MemberManager", null, new { id = "addItemMembers", @class = "button-small" });
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
+            <input type="submit" value="Create" class="btn btn-primary" />
         </div>
     </div>
 }
