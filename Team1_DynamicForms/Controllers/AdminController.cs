@@ -84,5 +84,45 @@ namespace Team1_DynamicForms.Controllers
             }
            
         }
+
+        public ActionResult Approve(int? id)
+        {
+            ApproveOrDenyViewModel ApproveOrDeny = new ApproveOrDenyViewModel();
+            ApproveOrDeny.formData = db.GetFormDataToApproveOrDeny((int)id);
+            ApproveOrDeny.accountWf = db.GetAccForkflow((int)id);
+
+            return View(ApproveOrDeny);
+        }
+
+        [HttpPost]
+        public ActionResult SubmitResult(int id, FormCollection collection)
+        {
+            if (collection["Submit"] == "Approve")
+            {
+                if(db.ApprovalOfForm(id) == 1)
+                {
+                    ViewBag.Text = "Form has been successfully approved";
+                    return View();
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+                
+            }
+            else if (collection["Submit"] == "Deny")
+            {
+                if (db.DenialOfForm(id) == 1)
+                {
+                    ViewBag.Text = "Form has been successfully denied";
+                    return View();
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+            }
+            return HttpNotFound();
+        }
     }
 }

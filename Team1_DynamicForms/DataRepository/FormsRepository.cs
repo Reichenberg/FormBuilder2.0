@@ -264,7 +264,35 @@ namespace Team1_DynamicForms.DataRepository
             db.SubmissionParts.Add(newSubmissionPart);
             db.SaveChanges();
 
+            if(finished.ToLower() == "yes")
+            {
+                WholeForm form = db.WholeForms.Find(fp.WholeFormId);
+                if(form.WorkFlowId > -1)
+                {
+                    var accWorkflows = db.AccountWorkflows.Where(aw => aw.WorkFlowId == form.WorkFlowId && aw.AccountId < 0);
+
+                    foreach(AccountWorkflow adminWF in accWorkflows)
+                    {
+                        AccountWorkflow newAW = new AccountWorkflow();
+                        int accountWorkFlowId = db.AccountWorkflows.Max(acwf => acwf.Id);
+                        accountWorkFlowId = accountWorkFlowId < 0 ? 1 : accountWorkFlowId + 1;
+
+                        newAW.Id = accountWorkFlowId;
+                        newAW.Order = adminWF.Order;
+                        newAW.Notified = adminWF.Notified;
+                        newAW.AccountId = adminWF.AccountId;
+                        newAW.WorkFlowId = adminWF.WorkFlowId;
+                        newAW.SubmissionWholeId = newSubmissionWhole.Id;
+
+                        db.AccountWorkflows.Add(newAW);
+                        db.SaveChanges();
+                    }
+                }
+            }
+
+
             return true;
+
         }
 
         public SubmissionPart getSubmissionPart(int submissionWholeId)
@@ -524,15 +552,15 @@ namespace Team1_DynamicForms.DataRepository
             List<AccountWorkflow> FormsToReturn = new List<AccountWorkflow>();
 
             //Gets account forkflows the admin must complete at some point in time.
-            var FormsToApprove =  db.AccountWorkflows.Where(aw => aw.AccountId == admin.Id && aw.Order != 0);
+            var FormsToApprove =  db.AccountWorkflows.Where(aw => aw.AccountId == admin.Id && aw.Order != 0 && aw.SubmissionWholeId > -1);
 
-            foreach (AccountWorkflow aW in FormsToApprove)
+            foreach (var aW in FormsToApprove)
             {
                 bool add = true;
                 //Gets all account workflows for each form submission to see if the admin is next in order
                 var checkForOrder = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == aW.SubmissionWholeId);
                 
-                foreach (AccountWorkflow checkOrder in checkForOrder)
+                foreach (var checkOrder in checkForOrder)
                 {
                     //If the admin is not next in line to approve the form, don't include the form to approve.
                     if(checkOrder.Order < aW.Order && checkOrder.Order > 0)
@@ -555,7 +583,7 @@ namespace Team1_DynamicForms.DataRepository
         {
             AccountWorkflow form = db.AccountWorkflows.Find(id);
             SubmissionWhole formSubmission = db.SubmissionWholes.Find(form.SubmissionWholeId);
-            Account user = db.Accounts.Find(3);
+            Account user = db.Accounts.Find(formSubmission.AccountId);
             return user.Name;
         }
 
@@ -563,7 +591,7 @@ namespace Team1_DynamicForms.DataRepository
         {
             AccountWorkflow form = db.AccountWorkflows.Find(id);
             SubmissionWhole formSubmission = db.SubmissionWholes.Find(form.SubmissionWholeId);
-            FormSubmission wholeFormSub = db.FormSubmissions.Find(6);
+            FormSubmission wholeFormSub = db.FormSubmissions.Find(formSubmission.FormSubmissionId);
             WholeForm wholeForm = db.WholeForms.Find(wholeFormSub.WholeFormId);
             return wholeForm.Name;
         }
@@ -586,7 +614,7 @@ namespace Team1_DynamicForms.DataRepository
             //Get all account workflows associated with the submitted form to see if the workflow has been completed
             var checkForLastApproval = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == approvedAW.SubmissionWholeId);
 
-            foreach(AccountWorkflow accW in checkForLastApproval)
+            foreach(var accW in checkForLastApproval)
             {
                 //If there is still someone remaining that must check the form, return true.
                 if(accW.Order != 0)
@@ -613,7 +641,7 @@ namespace Team1_DynamicForms.DataRepository
             //Get all account workflows associated with the submitted form to see if the workflow has been completed
             var checkToClearRestOfWorkflow = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == deniedAW.SubmissionWholeId);
 
-            foreach (AccountWorkflow accW in checkToClearRestOfWorkflow)
+            foreach (var accW in checkToClearRestOfWorkflow)
             {
                 if (accW.Order != 0)
                 {
@@ -629,6 +657,18 @@ namespace Team1_DynamicForms.DataRepository
 
             return 1;
         }
+
+
+
+
+
+
+
+
+
+
+
+
 
         public List<string> GetFilledFormData(int accWorkflowId)
         {
@@ -708,5 +748,13 @@ namespace Team1_DynamicForms.DataRepository
 
             return formdata;
         }
+
+
+        public AccountWorkflow GetAccountForkflowFromId(int id)
+        {
+            return db.AccountWorkflows.Find(id);
+        }
+
+
     }
 }

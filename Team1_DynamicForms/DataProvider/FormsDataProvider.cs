@@ -414,7 +414,7 @@ namespace Team1_DynamicForms.DataProvider
         {
             List<string> usernames = new List<string>();
 
-            foreach(AccountWorkflow form in workflows)
+            foreach(var form in workflows)
             {
                 usernames.Add(db.GetUserWhoFilledFormFromAccountWorkflow(form.Id));
             }
@@ -425,12 +425,50 @@ namespace Team1_DynamicForms.DataProvider
         {
             List<string> formNames = new List<string>();
 
-            foreach (AccountWorkflow form in workflows)
+            foreach (var form in workflows)
             {
                 formNames.Add(db.GetNameOFFilledFormFromAccountWorkflow(form.Id));
             }
             return formNames;
         }
+
+
+        public List<string> GetFormDataToApproveOrDeny(int accWorkflowId)
+        {
+            return db.GetFilledFormData(accWorkflowId);
+        }
+
+
+        public AccountWorkflow GetAccForkflow(int id)
+        {
+            return db.GetAccountForkflowFromId(id);
+        }
+
+
+        public int ApprovalOfForm(int id)
+        {
+            if (db.ApproveForm(id) == 1)
+            {
+                return 1;
+            }
+            return 0;
+
+        }
+
+        public int DenialOfForm(int id)
+        {
+            if (db.DenyForm(id) == 1)
+            {
+                return 1;
+            }
+            return 0;
+
+        }
+
+
+
+
+
     }
 
    
