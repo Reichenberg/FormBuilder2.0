@@ -1,0 +1,22 @@
+﻿@model Team1_DynamicForms.Models.ApproveOrDenyViewModel
+@{
+    ViewBag.Title = "Approve";
+}
+
+<h2>Review Form</h2>
+
+@Html.Raw( @Model.formData)
+<br>
+<div class="row">
+    <div class="col-xs-12">
+        <form method="post" action="/admin/submitResult/@Model.accountWf">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input name="Submit" type="submit" value="Approve" class="btn btn-primary" />
+                    <input name="Submit" type="submit" value="Deny" class="btn btn-success" />
+                    <a href="/user/index" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

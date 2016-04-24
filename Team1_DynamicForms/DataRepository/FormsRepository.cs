@@ -264,7 +264,35 @@ namespace Team1_DynamicForms.DataRepository
             db.SubmissionParts.Add(newSubmissionPart);
             db.SaveChanges();
 
+            if(finished.ToLower() == "yes")
+            {
+                WholeForm form = db.WholeForms.Find(fp.WholeFormId);
+                if(form.WorkFlowId > -1)
+                {
+                    var accWorkflows = db.AccountWorkflows.Where(aw => aw.WorkFlowId == form.WorkFlowId && (!(aw.SubmissionWholeId.HasValue))).ToList();
+
+                    foreach(var adminWF in accWorkflows)
+                    {
+                        AccountWorkflow newAW = new AccountWorkflow();
+                        int accountWorkFlowId = db.AccountWorkflows.Max(acwf => acwf.Id);
+                        accountWorkFlowId = accountWorkFlowId < 0 ? 1 : accountWorkFlowId + 1;
+
+                        newAW.Id = accountWorkFlowId;
+                        newAW.Order = adminWF.Order;
+                        newAW.Notified = adminWF.Notified;
+                        newAW.AccountId = adminWF.AccountId;
+                        newAW.WorkFlowId = adminWF.WorkFlowId;
+                        newAW.SubmissionWholeId = newSubmissionWhole.Id;
+
+                        db.AccountWorkflows.Add(newAW);
+                        db.SaveChanges();
+                    }
+                }
+            }
+
+
             return true;
+
         }
 
         public SubmissionPart getSubmissionPart(int submissionWholeId)
@@ -360,6 +388,11 @@ namespace Team1_DynamicForms.DataRepository
 
             return submittedFormsList;
         }
+
+
+
+
+
 
         /// <summary>
         /// Gets workflows from database based on user id
@@ -502,6 +535,277 @@ namespace Team1_DynamicForms.DataRepository
         {
             return db.WholeForms.Where(wf => wf.AccountId == user.Id).ToDictionary(wf => wf.Id, wf => wf.Name);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+        public List<AccountWorkflow> GetSubmittedFormsForApproval(Account admin)
+        {
+            List<AccountWorkflow> FormsToReturn = new List<AccountWorkflow>();
+
+            //Gets account forkflows the admin must complete at some point in time.
+            var FormsToApprove =  db.AccountWorkflows.Where(aw => aw.AccountId == admin.Id && aw.Order != 0 && aw.SubmissionWholeId > -1);
+
+            foreach (var aW in FormsToApprove)
+            {
+                bool add = true;
+                //Gets all account workflows for each form submission to see if the admin is next in order
+                var checkForOrder = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == aW.SubmissionWholeId);
+                
+                foreach (var checkOrder in checkForOrder)
+                {
+                    //If the admin is not next in line to approve the form, don't include the form to approve.
+                    if(checkOrder.Order < aW.Order && checkOrder.Order > 0)
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+
+                if(add == true)
+                {
+                    FormsToReturn.Add(aW);
+                }
+            }
+
+            return FormsToReturn;
+        }
+
+        public string GetUserWhoFilledFormFromAccountWorkflow(int id)
+        {
+            AccountWorkflow form = db.AccountWorkflows.Find(id);
+            SubmissionWhole formSubmission = db.SubmissionWholes.Find(form.SubmissionWholeId);
+            Account user = db.Accounts.Find(formSubmission.AccountId);
+            return user.Name;
+        }
+
+        public string GetNameOFFilledFormFromAccountWorkflow(int id)
+        {
+            AccountWorkflow form = db.AccountWorkflows.Find(id);
+            SubmissionWhole formSubmission = db.SubmissionWholes.Find(form.SubmissionWholeId);
+            FormSubmission wholeFormSub = db.FormSubmissions.Find(formSubmission.FormSubmissionId);
+            WholeForm wholeForm = db.WholeForms.Find(wholeFormSub.WholeFormId);
+            return wholeForm.Name;
+        }
+
+
+
+
+
+
+
+
+
+        public int ApproveForm(int accWorkflowId)
+        {
+            //Find the account workflow to approve
+            AccountWorkflow approvedAW = db.AccountWorkflows.Find(accWorkflowId);
+            approvedAW.Order = 0;
+            db.SaveChanges();
+
+            //Get all account workflows associated with the submitted form to see if the workflow has been completed
+            var checkForLastApproval = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == approvedAW.SubmissionWholeId);
+
+            foreach(var accW in checkForLastApproval)
+            {
+                //If there is still someone remaining that must check the form, return true.
+                if(accW.Order != 0)
+                {
+                    return 1;
+                }
+            }
+
+            //If all in the workflow have approved, set the status to Approved for the form
+            SubmissionWhole completedForm = db.SubmissionWholes.Find(approvedAW.SubmissionWholeId);
+            FormSubmission approvedForm = db.FormSubmissions.Find(completedForm.FormSubmissionId);
+            approvedForm.ApprovalStatus = "Approved";
+
+            return 1;
+        }
+
+        public int DenyForm(int accWorkflowId)
+        {
+            //Find the account workflow to deny
+            AccountWorkflow deniedAW = db.AccountWorkflows.Find(accWorkflowId);
+            deniedAW.Order = 0;
+            db.SaveChanges();
+
+            //Get all account workflows associated with the submitted form to see if the workflow has been completed
+            var checkToClearRestOfWorkflow = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == deniedAW.SubmissionWholeId);
+
+            foreach (var accW in checkToClearRestOfWorkflow)
+            {
+                if (accW.Order != 0)
+                {
+                    accW.Order = 0;
+                    db.SaveChanges();
+                }
+            }
+
+            //Set the entire form to Denied
+            SubmissionWhole completedForm = db.SubmissionWholes.Find(deniedAW.SubmissionWholeId);
+            FormSubmission deniedForm = db.FormSubmissions.Find(completedForm.FormSubmissionId);
+            deniedForm.ApprovalStatus = "Denied";
+
+            return 1;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public string GetFilledFormData(int accWorkflowId)
+        {
+            AccountWorkflow aW = db.AccountWorkflows.Find(accWorkflowId);
+            SubmissionPart filledForm = db.SubmissionParts.Find(aW.SubmissionWholeId);
+            string htmlData = filledForm.HtmlCode;
+            string test = "";
+            int currentIndex = 0;
+            int nextElement = 0;
+            while (currentIndex < htmlData.Length )
+            {
+                nextElement = htmlData.IndexOf("type=\"text\"",currentIndex);
+                if (nextElement >= 0)
+                {
+                    test = htmlData.Substring(nextElement, "type=\"text\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("type=\"text\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"text\"".Length, " readonly");
+                    currentIndex = nextElement + "type=\"text\"".Length + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("type=\"timepicker\"", currentIndex, "type=\"timepicker\"".Length) + "type=\"timepicker\"".Length;
+                if (nextElement >= 0)
+                {
+                    test = htmlData.Substring(nextElement, "type=\"timepicker\"".Length); 
+                }
+
+                if (nextElement > currentIndex && test.Equals("type=\"timepicker\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"timepicker\"".Length, " disabled");
+                    currentIndex = nextElement + "type=\"timepicker\"".Length + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("type=\"datepicker\"", currentIndex) + "type=\"datepicker\"".Length;
+                if (nextElement >=0)
+                {
+                    test = htmlData.Substring(nextElement, "type=\"datepicker\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("type=\"datepicker\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"datepicker\"".Length, " disabled");
+                    currentIndex = nextElement + "type=\"datepicker\"".Length + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("<select class=\"form-control\"", currentIndex) + "<select class=\"form-control\"".Length;
+                if (nextElement >= 0)
+                {
+                    test = htmlData.Substring(nextElement, "<select class=\"form-control\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("<select class=\"form-control\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "<select class=\"form-control\"".Length, " disabled");
+                    currentIndex = nextElement + "<select class=\"form-control\"".Length + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("type=\"checkbox\"", currentIndex) + "type=\"checkbox\"".Length;
+                if (nextElement >=0)
+                {
+                    test = htmlData.Substring(nextElement, "type=\"checkbox\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("type=\"checkbox\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"checkbox\"".Length, " disabled readonly");
+                    currentIndex = nextElement + "type=\"checkbox\"".Length + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentIndex = 0;
+            nextElement = 0;
+            while (currentIndex < htmlData.Length)
+            {
+                nextElement = htmlData.IndexOf("type=\"radio\"", currentIndex) + "type=\"radio\"".Length;
+                if (nextElement >=0)
+                {
+                    test = htmlData.Substring(nextElement, "type=\"radio\"".Length); 
+                }
+                if (nextElement > currentIndex && test.Equals("type=\"radio\""))
+                {
+                    htmlData = htmlData.Insert(nextElement + "type=\"radio\"".Length, " disabled readonly");
+                    currentIndex = nextElement + "type=\"radio\"".Length + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return htmlData;
+        }
+
+
+        public AccountWorkflow GetAccountForkflowFromId(int id)
+        {
+            return db.AccountWorkflows.Find(id);
+        }
+
 
     }
 }

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Team1_DynamicForms.DataProvider;
+using Team1_DynamicForms.Models;
 
 namespace Team1_DynamicForms.Controllers
 {
@@ -18,7 +19,13 @@ namespace Team1_DynamicForms.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            return View();
+            WorkflowsToApproveViewModel WFViewModel = new WorkflowsToApproveViewModel();
+
+            WFViewModel.formsToApprove = db.GetSubmittedFormsForAdminReview();
+            WFViewModel.usersWhoFilledForm = db.GetUsernamesOfSubmittedFormsForAdminReview(WFViewModel.formsToApprove);
+            WFViewModel.nameOfFilledForm = db.GetNamesOfSubmittedFormsForAdminReview(WFViewModel.formsToApprove);
+
+            return View(WFViewModel);
         }
 
         public ActionResult CreateForm()
@@ -76,6 +83,46 @@ namespace Team1_DynamicForms.Controllers
                 return Json(exception);
             }
            
+        }
+
+        public ActionResult Approve(int? id)
+        {
+            ApproveOrDenyViewModel ApproveOrDeny = new ApproveOrDenyViewModel();
+            ApproveOrDeny.formData = db.GetFormDataToApproveOrDeny((int)id);
+            ApproveOrDeny.accountWf = (int)id;
+
+            return View(ApproveOrDeny);
+        }
+
+        [HttpPost]
+        public ActionResult SubmitResult(int id, FormCollection collection)
+        {
+            if (collection["Submit"] == "Approve")
+            {
+                if(db.ApprovalOfForm(id) == 1)
+                {
+                    ViewBag.Text = "Form has been successfully approved";
+                    return View();
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+                
+            }
+            else if (collection["Submit"] == "Deny")
+            {
+                if (db.DenialOfForm(id) == 1)
+                {
+                    ViewBag.Text = "Form has been successfully denied";
+                    return View();
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+            }
+            return HttpNotFound();
         }
     }
 }

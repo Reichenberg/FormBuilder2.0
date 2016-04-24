@@ -18,7 +18,6 @@ namespace Team1_DynamicForms.Controllers
         // GET: User  
         public ActionResult Index()
         {
-
             if (User.Identity.IsAuthenticated)
             {
                 // creates an item usint the FormsAndSubmissionsViewModel to allow the user to
