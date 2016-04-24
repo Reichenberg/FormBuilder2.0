@@ -11,6 +11,7 @@ using Team1_DynamicForms.DataProvider;
 using Microsoft.AspNet.Identity;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace Team1_DynamicForms.Controllers
 {
@@ -101,6 +102,46 @@ namespace Team1_DynamicForms.Controllers
             var member = new WorkFlowCreatePartialViewModel();
             return PartialView("CreatePartial",member);
         }
+
+  /*           public async Task<ActionResult> EmailWorkflowResult(EmailWorkflow model)
+        {
+            if(ModelState.IsValid)
+            {
+                var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
+                var message = new MailMessage();
+
+                string[] recipientEmail = null; //insert a call to the repo to get a string of emails
+
+                foreach (var email in recipientEmail)
+                {
+                    message.To.Add(new MailAddress(email)); //use the array string here???
+            }
+                
+
+                message.From = new MailAddress("se1scrapemail@yahoo.com");
+                message.Subject = "WorkFlow Notifications";
+                message.Body = string.Format(body, model.EmailFrom, model.EmailTo, model.Message);
+                message.IsBodyHtml = true;
+
+                using (var smtp = new SmtpClient())
+                {
+                    var credential = new NetworkCredential
+                    {
+                        UserName = "se1scrapemail@yahoo.com",
+                        Password = "Passw0rd!"
+                    };
+                   
+                   dummied out for testing purposes--gonna undummy it once I know it should work 
+                    smtp.Credentials = credential;
+                    smtp.Host = "smtp.mail.yahoo.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    await smtp.SendMailAsync(message);
+                    return RedirectToAction("Sent"); //redirect to new workflow creation????
+                }
+            }
+            return View(model);
+        }*/
 
     }
 }

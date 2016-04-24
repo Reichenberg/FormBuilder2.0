@@ -240,7 +240,7 @@
     <Compile Include="Models\database_firewall_rules.cs">
       <DependentUpon>IdentityDbAzureModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\emailWorkflow.cs" />
+    <Compile Include="Models\EmailWorkflow.cs" />
     <Compile Include="Models\FormDisplayView.cs" />
     <Compile Include="Models\FormPage.cs">
       <DependentUpon>FormsDbAzureModel.tt</DependentUpon>

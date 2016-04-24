@@ -15,6 +15,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Team1_DynamicForms.Models;
+using System.Web.Security;
 
 /// <summary>
 /// Handles communication with database.
@@ -361,6 +362,31 @@ namespace Team1_DynamicForms.DataRepository
             return submittedFormsList;
         }
 
+        // <summary>
+        // Sends out a notification email to workflow members who need to 
+        //  check off part of a form
+        // 
+        //should probably go if ( workflow has emails attached to a notification) then
+        // (where notify id == id) send email to this email
+        public EmailWorkflow EmailWorkflowNotifications(List<string> userEmails)
+        {
+            string[] sendTo = userEmails.ToArray();
+
+            string from = "tmclark92@gmail.com";
+            string messageBody = "Please approve these notifications!";
+
+            EmailWorkflow notifyEmail = new EmailWorkflow(from, sendTo, messageBody);
+
+            ///dont actually need from??? since I made a junk email for this purpose
+            /// not gonna be assed to deal with stmp junk i guess
+
+            return notifyEmail;
+        }
+        
+
+
+        
+
         /// <summary>
         /// Gets workflows from database based on user id
         /// TODO: add ability to grab workflows by type
@@ -478,14 +504,6 @@ namespace Team1_DynamicForms.DataRepository
             }
             return users;
         }
-
-        // <summary>
-        // Sends out a notification email to workflow members who need to 
-        //  check off part of a form
-        // 
-        //should probably go if ( workflow has emails attached to a notification) then
-        // (where notify id == id) send email to this email
-
 
         /// <summary>
         /// Gets an account based on the user current context's user id
