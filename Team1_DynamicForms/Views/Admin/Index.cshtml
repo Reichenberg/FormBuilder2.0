@@ -8,52 +8,60 @@
 <h2>Hello @User.Identity.GetUserName()</h2>
 <hr />
 
-    <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">Actions</div>
-            <div class="panel-body">
-                <div class="col-md-3 col-xs-12">
-                    <h3>
-                        Create
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </h3>
-                    <hr />
-                    <ul class="sectionOptions">
-                        <a href="/Admin/CreateForm">
-                            <li>
-                                Form
-                            </li>
-                        </a>
-                        <a href="/Workflow/CreateIndex">
-                            <li>
-                                Workflow
-                            </li>
-                        </a>
-                    </ul>
-                </div>
+@if (User.IsInRole("SuperAdmin"))
+{
+<div class="row">
+    <div class="col-md-3">
+        <a class="button-main" href="/superadmin/Index"><span class="glyphicon glyphicon-list-alt"></span> Manage Users</a>
+    </div>
+</div>
+}
 
-                <div class="col-md-1"></div>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Actions</div>
+        <div class="panel-body">
+            <div class="col-md-3 col-xs-12">
+                <h3>
+                    Create
+                    <span class="glyphicon glyphicon-plus"></span>
+                </h3>
+                <hr />
+                <ul class="sectionOptions">
+                    <a href="/Admin/CreateForm">
+                        <li>
+                            Form
+                        </li>
+                    </a>
+                    <a href="/Workflow/CreateIndex">
+                        <li>
+                            Workflow
+                        </li>
+                    </a>
+                </ul>
+            </div>
 
-                <div class="col-md-3 col-xs-12">
-                    <h3>
-                        Pending Approval
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </h3>
-                    <hr />
+            <div class="col-md-1"></div>
+
+            <div class="col-md-3 col-xs-12">
+                <h3>
+                    Pending Approval
+                    <span class="glyphicon glyphicon-ok"></span>
+                </h3>
+                <hr />
+                <ul class="sectionOptions">
                     <ul class="sectionOptions">
-                        <ul class="sectionOptions">
-                            @for (int i = 0; i < Model.formsToApprove.Count; i++)
-                            {
-                                <a href="/admin/approve/@Model.formsToApprove[i].Id">
-                                    <li>
-                                        @Model.nameOfFilledForm[0] submitted by user @Model.usersWhoFilledForm[0]
-                                    </li>
-                                </a>
-                            }
-                        </ul>
+                        @for (int i = 0; i < Model.formsToApprove.Count; i++)
+                        {
+                            <a href="/admin/approve/@Model.formsToApprove[i].Id">
+                                <li>
+                                    @Model.nameOfFilledForm[0] submitted by user @Model.usersWhoFilledForm[0]
+                                </li>
+                            </a>
+                        }
                     </ul>
-                </div>
+                </ul>
             </div>
         </div>
     </div>
-
+</div>
