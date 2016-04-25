@@ -834,5 +834,50 @@ namespace Team1_DynamicForms.DataRepository
         }
 
 
+
+
+
+
+
+
+        public List<WholeForm> GetFormNamesForFormsInWorkflow()
+        {
+            Account user = GetCurrentAccount();
+            var userSubmissions = db.SubmissionWholes.Where(sw => sw.AccountId == user.Id).ToList();
+
+            List<FormSubmission> forms = new List<FormSubmission>();
+            foreach (var us in userSubmissions)
+            {
+                FormSubmission form = db.FormSubmissions.Find(us.FormSubmissionId);
+                forms.Add(form);
+            }
+
+            List<WholeForm> returnForms = new List<WholeForm>();
+
+            foreach(FormSubmission formSub in forms)
+            {
+                WholeForm formToCheck = db.WholeForms.Find(formSub.WholeFormId);
+                if(formToCheck.WorkFlowId > 0)
+                {
+                    returnForms.Add(formToCheck);
+                }
+            }
+            return returnForms;
+        }
+
+
+        public List<FormSubmission> GetFormApprovalStatusesForUser(List<WholeForm> formNames)
+        {
+            List<FormSubmission> returnFormSubs = new List<FormSubmission>();
+
+            foreach(WholeForm form in formNames)
+            {
+                
+            }
+        }
+
+
+        
+
     }
 }

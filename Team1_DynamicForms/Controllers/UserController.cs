@@ -29,6 +29,8 @@ namespace Team1_DynamicForms.Controllers
 
                 formsubmview.submittedForms = db.GetSubmittedFormFromDb(userName);
                 formsubmview.unsubmittedForms = db.GetWholeFormFromDb();
+                formsubmview.Statuses = db.GetFormApprovalStatuses();
+                formsubmview.FormNames = db.GetFormNamesForFormsInWorkflow();
 
                 return View(formsubmview);
             }

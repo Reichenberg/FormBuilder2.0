@@ -11,5 +11,9 @@ namespace Team1_DynamicForms.Models
         public List<SubmissionWhole> submittedForms { get; set; }
 
         public List<WholeForm> unsubmittedForms { get; set; }
+
+        public List<FormSubmission> Statuses { get; set; }
+
+        public List<WholeForm> FormNames { get; set; }
     }
 }
