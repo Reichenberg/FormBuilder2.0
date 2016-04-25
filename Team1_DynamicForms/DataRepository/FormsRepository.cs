@@ -666,7 +666,7 @@ namespace Team1_DynamicForms.DataRepository
             db.SaveChanges();
 
             //Get all account workflows associated with the submitted form to see if the workflow has been completed
-            var checkToClearRestOfWorkflow = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == deniedAW.SubmissionWholeId);
+            var checkToClearRestOfWorkflow = db.AccountWorkflows.Where(aw => aw.SubmissionWholeId == deniedAW.SubmissionWholeId).ToList();
 
             foreach (var accW in checkToClearRestOfWorkflow)
             {
@@ -727,12 +727,11 @@ namespace Team1_DynamicForms.DataRepository
             nextElement = 0;
             while (currentIndex < htmlData.Length)
             {
-                nextElement = htmlData.IndexOf("type=\"timepicker\"", currentIndex, "type=\"timepicker\"".Length) + "type=\"timepicker\"".Length;
+                nextElement = htmlData.IndexOf("type=\"timepicker\"", currentIndex);
                 if (nextElement >= 0)
                 {
                     test = htmlData.Substring(nextElement, "type=\"timepicker\"".Length); 
                 }
-
                 if (nextElement > currentIndex && test.Equals("type=\"timepicker\""))
                 {
                     htmlData = htmlData.Insert(nextElement + "type=\"timepicker\"".Length, " disabled");
@@ -748,7 +747,7 @@ namespace Team1_DynamicForms.DataRepository
             nextElement = 0;
             while (currentIndex < htmlData.Length)
             {
-                nextElement = htmlData.IndexOf("type=\"datepicker\"", currentIndex) + "type=\"datepicker\"".Length;
+                nextElement = htmlData.IndexOf("type=\"datepicker\"", currentIndex);
                 if (nextElement >=0)
                 {
                     test = htmlData.Substring(nextElement, "type=\"datepicker\"".Length); 
@@ -768,7 +767,7 @@ namespace Team1_DynamicForms.DataRepository
             nextElement = 0;
             while (currentIndex < htmlData.Length)
             {
-                nextElement = htmlData.IndexOf("<select class=\"form-control\"", currentIndex) + "<select class=\"form-control\"".Length;
+                nextElement = htmlData.IndexOf("<select class=\"form-control\"", currentIndex);
                 if (nextElement >= 0)
                 {
                     test = htmlData.Substring(nextElement, "<select class=\"form-control\"".Length); 
@@ -788,7 +787,7 @@ namespace Team1_DynamicForms.DataRepository
             nextElement = 0;
             while (currentIndex < htmlData.Length)
             {
-                nextElement = htmlData.IndexOf("type=\"checkbox\"", currentIndex) + "type=\"checkbox\"".Length;
+                nextElement = htmlData.IndexOf("type=\"checkbox\"", currentIndex);
                 if (nextElement >=0)
                 {
                     test = htmlData.Substring(nextElement, "type=\"checkbox\"".Length); 
@@ -808,7 +807,7 @@ namespace Team1_DynamicForms.DataRepository
             nextElement = 0;
             while (currentIndex < htmlData.Length)
             {
-                nextElement = htmlData.IndexOf("type=\"radio\"", currentIndex) + "type=\"radio\"".Length;
+                nextElement = htmlData.IndexOf("type=\"radio\"", currentIndex);
                 if (nextElement >=0)
                 {
                     test = htmlData.Substring(nextElement, "type=\"radio\"".Length); 
@@ -836,48 +835,60 @@ namespace Team1_DynamicForms.DataRepository
 
 
 
-
-
-
-
-        public List<WholeForm> GetFormNamesForFormsInWorkflow()
+        public void GetFormStatusesForUser()
         {
             Account user = GetCurrentAccount();
-            var userSubmissions = db.SubmissionWholes.Where(sw => sw.AccountId == user.Id).ToList();
 
-            List<FormSubmission> forms = new List<FormSubmission>();
-            foreach (var us in userSubmissions)
+            var userSubmissionWholes = db.SubmissionWholes.Where(sw => sw.AccountId == user.Id).ToList();
+            List<FormSubmission> userFormSubmissions = new List<FormSubmission>();
+            foreach (var userSW in userSubmissionWholes)
             {
-                FormSubmission form = db.FormSubmissions.Find(us.FormSubmissionId);
-                forms.Add(form);
+                FormSubmission userFormSubmission = db.FormSubmissions.Find(userSW.FormSubmissionId);
+                userFormSubmissions.Add(userFormSubmission);
             }
 
-            List<WholeForm> returnForms = new List<WholeForm>();
-
-            foreach(FormSubmission formSub in forms)
+            List<WholeForm> userWholeForms = new List<WholeForm>();
+            foreach (var userFS in userFormSubmissions)
             {
-                WholeForm formToCheck = db.WholeForms.Find(formSub.WholeFormId);
-                if(formToCheck.WorkFlowId > 0)
+                WholeForm userWholeForm = db.WholeForms.Find(userFS.WholeFormId);
+                userWholeForms.Add(userWholeForm);
+            }
+
+            List<WholeForm> userWholeFormsToReturn = new List<WholeForm>();
+            foreach (var userWF in userWholeForms)
+            {
+                if(userWF.WorkFlowId > 0)
                 {
-                    returnForms.Add(formToCheck);
+                    userWholeFormsToReturn.Add(userWF);
                 }
             }
-            return returnForms;
-        }
 
-
-        public List<FormSubmission> GetFormApprovalStatusesForUser(List<WholeForm> formNames)
-        {
-            List<FormSubmission> returnFormSubs = new List<FormSubmission>();
-
-            foreach(WholeForm form in formNames)
+            List<FormSubmission> userFormSubmissionsToReturn = new List<FormSubmission>();
+            foreach (var userFS in userFormSubmissions)
             {
-                
+                for(int i = 0;i < userWholeFormsToReturn.Count;i++)
+                {
+                    if (userFS.WholeFormId == userWholeFormsToReturn[i].Id)
+                    {
+                        userFormSubmissionsToReturn.Add(userFS);
+                        break;
+                    }
+                }
             }
+
+            List<string> returnStrs = new List<string>();
+            foreach(FormSubmission FormSub in userFormSubmissionsToReturn)
+            {
+                foreach (WholeForm FormName in userWholeFormsToReturn)
+                {
+
+                }
+            }
+
+
         }
 
 
-        
 
     }
 }

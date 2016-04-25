@@ -153,10 +153,10 @@ namespace Team1_DynamicForms.DataProvider
                         {
                             if (option.ToLower().Contains("checkbox"))
                             {
-                                int insertIndex = Html.IndexOf("value=\"\"", nextFormType);
+                                int insertIndex = Html.IndexOf("name=\""+option+ "\"", nextFormType);
                                 if (insertIndex > 0)
                                 {
-                                    newHtml = Html.Insert(insertIndex + "value=\"\"".Length, " checked ");
+                                    newHtml = Html.Insert(insertIndex + ("name=\"" + option + "\"").Length, " checked ");
                                     readyForNextItem = true;
                                 }
                             }
@@ -465,16 +465,6 @@ namespace Team1_DynamicForms.DataProvider
             }
             return 0;
 
-        }
-
-        public List<FormSubmission> GetFormApprovalStatuses()
-        {
-            return db.GetFormApprovalStatusesForUser();
-        }
-
-        public List<WholeForm> GetFormNamesForFormsInWorkflow()
-        {
-            return db.GetFormNamesForFormsInWorkflow();
         }
 
     }
