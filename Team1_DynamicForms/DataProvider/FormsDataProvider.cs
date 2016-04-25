@@ -33,7 +33,7 @@ namespace Team1_DynamicForms.DataProvider
         /// <returns></returns>
         public bool AddAccount(string name, string type, string userId)
         {
-            if(db.AddAccountToDb(name,type,userId))
+            if (db.AddAccountToDb(name, type, userId))
             {
                 return true;
             }
@@ -50,20 +50,20 @@ namespace Team1_DynamicForms.DataProvider
         /// <returns>Json response indicating failure or success</returns>
         public bool AddFormToDb(String formName, String formHtml, int workflow, string creatorAccount)
         {
-           // try {
-                if (workflow < 1)
-                {
-                    workflow = 1;
-                }
+            // try {
+            if (workflow < 1)
+            {
+                workflow = 1;
+            }
 
-                db.InsertFormToDb(formName, formHtml, workflow, creatorAccount);
+            db.InsertFormToDb(formName, formHtml, workflow, creatorAccount);
 
-                return true;
-          //  }
-          //  catch(Exception e)
-           // {
-           //     throw (new Exception("Error adding form to database"));
-           // }
+            return true;
+            //  }
+            //  catch(Exception e)
+            // {
+            //     throw (new Exception("Error adding form to database"));
+            // }
         }
 
         /// <summary>
@@ -73,7 +73,8 @@ namespace Team1_DynamicForms.DataProvider
         /// <returns></returns>
         public FormPage GetFormPageToFillFromDb(int wholeFormId)
         {
-            try {
+            try
+            {
 
                 return db.GetFormToFill(wholeFormId);
             }
@@ -83,7 +84,7 @@ namespace Team1_DynamicForms.DataProvider
             }
         }
 
-        
+
         /// <summary>
         /// Fills HTML form code with user input
         /// </summary>
@@ -152,10 +153,10 @@ namespace Team1_DynamicForms.DataProvider
                         {
                             if (option.ToLower().Contains("checkbox"))
                             {
-                                int insertIndex = Html.IndexOf("value=\"\"", nextFormType);
+                                int insertIndex = Html.IndexOf("name=\""+option+ "\"", nextFormType);
                                 if (insertIndex > 0)
                                 {
-                                    newHtml = Html.Insert(insertIndex + "value=\"\"".Length, " checked ");
+                                    newHtml = Html.Insert(insertIndex + ("name=\"" + option + "\"").Length, " checked ");
                                     readyForNextItem = true;
                                 }
                             }
@@ -205,7 +206,7 @@ namespace Team1_DynamicForms.DataProvider
 
             string newHtml = createFilledHtml(collection, Html);
 
-            db.AddFormSubmission(formPage.Id,userId, newHtml, finished);
+            db.AddFormSubmission(formPage.Id, userId, newHtml, finished);
 
             return true;
         }
@@ -217,7 +218,8 @@ namespace Team1_DynamicForms.DataProvider
         /// <returns></returns>
         public SubmissionPart GetSubmissionPart(int submissionWholeId)
         {
-            try {
+            try
+            {
                 return db.getSubmissionPart(submissionWholeId);
             }
             catch (Exception e)
@@ -239,9 +241,9 @@ namespace Team1_DynamicForms.DataProvider
             FormPage formPage = db.GetPageFromSubmissionWhole(submissionWholeId);
             string Html = formPage.HtmlCode;
 
-            string newHtml = createFilledHtml(collection,Html);
+            string newHtml = createFilledHtml(collection, Html);
 
-            if(db.UpdateSubmissionWhole(submissionWholeId, newHtml, finished))
+            if (db.UpdateSubmissionWhole(submissionWholeId, newHtml, finished))
             {
                 return true;
             }
@@ -296,7 +298,7 @@ namespace Team1_DynamicForms.DataProvider
         {
             //try
             //{
-                return db.GetWholeForm();
+            return db.GetWholeForm();
             //}
             //catch (Exception e)
             //{
@@ -306,20 +308,20 @@ namespace Team1_DynamicForms.DataProvider
 
         //should retrieve a submitted form for a user to view
         // userId is used to make sure that the forms submitted will have the correct user
-            // forms attached to it
+        // forms attached to it
         // submissionFormId is the id used to generate the link for the page
         public List<SubmissionWhole> GetSubmittedFormFromDb(string userName)
         {
-           // try
+            // try
             //{
-                return db.GetSubmittedForm(userName);
+            return db.GetSubmittedForm(userName);
             //}
             //catch (Exception e)
             //{
-             //   throw (new Exception("Error retrieving submitted form from database."));
+            //   throw (new Exception("Error retrieving submitted form from database."));
             //}
         }
-   
+
 
         /// <summary>
         /// Creates and adds a new workflow to the database based on the given list of emails
@@ -334,7 +336,7 @@ namespace Team1_DynamicForms.DataProvider
 
             //Get user ids, before doing anything else, prevents junk workflows from being made
             List<int> users = db.GetUsersByEmail(userEmails);
-            
+
             //Check that all emails have associated accounts.
             if (users.Count != userEmails.Count)
             {
@@ -414,7 +416,7 @@ namespace Team1_DynamicForms.DataProvider
         {
             List<string> usernames = new List<string>();
 
-            foreach(var form in workflows)
+            foreach (var form in workflows)
             {
                 usernames.Add(db.GetUserWhoFilledFormFromAccountWorkflow(form.Id));
             }
@@ -465,11 +467,5 @@ namespace Team1_DynamicForms.DataProvider
 
         }
 
-
-
-
-
     }
-
-   
 }

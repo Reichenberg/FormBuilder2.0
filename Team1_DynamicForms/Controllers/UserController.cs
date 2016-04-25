@@ -30,6 +30,7 @@ namespace Team1_DynamicForms.Controllers
                 formsubmview.submittedForms = db.GetSubmittedFormFromDb(userName);
                 formsubmview.unsubmittedForms = db.GetWholeFormFromDb();
 
+
                 return View(formsubmview);
             }
             return RedirectToAction("../Account/Login");
